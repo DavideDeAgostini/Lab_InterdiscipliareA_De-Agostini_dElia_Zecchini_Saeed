@@ -81,7 +81,7 @@ public class CsvFileReader {
     }
 
     public static void main(String[] args) {
-        String path = args.length > 0 ? args[0] : "/Users/luigi/Documents/GitHub/Lab_InterdiscipliareA_De-Agostini_dElia_Zecchini_Saeed/data/proiezioni.csv";
+        String path = args.length > 0 ? args[0] : "F:/Scuola/Progetti/Progetti_Insubria/Lab_InterdiscipliareA_De-Agostini_dElia_Zecchini_Saeed/data/proiezioni.csv";
         CsvFileReader csvReader = new CsvFileReader(path);
 
         try {
