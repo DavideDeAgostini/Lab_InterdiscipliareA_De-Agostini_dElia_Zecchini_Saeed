@@ -1,4 +1,10 @@
-    // metodo per prendere le info dal file csv
+ package cinemax;
+ 
+ public class Prenotazione {
+
+
+ }
+ // metodo per prendere le info dal file csv
 
     // arrylist dove salvare la ricerca
 
