@@ -196,25 +196,25 @@ public class Proiezioni {
         return proiezioni.size();
     }
 
-    // ── main di esempio ───────────────────────────────────────────────────────
+    // main di esempio 
 
     public static void main(String[] args) throws IOException {
         Proiezioni p = new Proiezioni("proiezioni.csv");
 
-        System.out.println("\n=== Film con 'will' nel titolo ===");
+        //Film con 'will' nel titolo
         p.cercaPerTitolo("will").forEach(System.out::println);
 
-        System.out.println("\n=== Genere Drama ===");
+        // Genere Drama 
         p.cercaPerGenere("Drama").stream().limit(5).forEach(System.out::println);
 
-        System.out.println("\n=== Proiezioni del 2027-12-29 ===");
+        // Proiezioni del 2027-12-29
         p.cercaPerData(LocalDate.of(2027, 12, 29)).forEach(System.out::println);
 
-        System.out.println("\n=== Fasce orarie 10:00–12:00 ===");
+        //Fasce orarie 10:00–12:00
         p.cercaPerFasceOrarie(LocalTime.of(10, 0), LocalTime.of(12, 0))
          .stream().limit(5).forEach(System.out::println);
 
-        System.out.println("\n=== Ricerca combinata: Drama, 29-dic, dopo le 12 ===");
+        // Ricerca combinata: Drama, 29-dic, dopo le 12
         p.cerca(null, "Drama", LocalDate.of(2027, 12, 29),
                 LocalTime.of(12, 0), null).forEach(System.out::println);
     }
