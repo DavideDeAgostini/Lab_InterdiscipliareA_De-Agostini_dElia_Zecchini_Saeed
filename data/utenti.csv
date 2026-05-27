@@ -1,9 +1,8 @@
-nome,cognome,username,password,domicilio,ruolo
-Sigmund,Freud,SigFr,(Inserire pw),Hampstead,proiezionista
-Federico,Fellini,FFellini,(Inserire pw),Rimini,proiezionista
-Giorgio,Calandrelli,GCalandrelli,(Inserire pw),Soriso,bigliettaio
-Mirko,Alessandrini,MAlessandrini,(Inserire pw),Roma,bigliettaio
-Simone,Alessandrini,SAlessandrini,(Inserire pw),Roma,bigliettaio
-Sara,Stefanizzi,SStefanizzi,(Inserire pw),Rimini,bigliettaio
-Gianmarco,Tocco,GTocco,(Inserire pw),Roma,bigliettaio
-
+nome;cognome;username;password;domicilio;ruolo
+Sigmund;Freud;Sigfr;;Hampstead;proiezionista
+Federico;Fellini;FFellini;(Inserire pw);Rimini;proiezionista
+Giorgio;Calandrelli;GCalandrelli;(Inserire pw);Soriso;bigliettaio
+Mirko;Alessandrini;MAlessandrini;(Inserire pw);Roma;bigliettaio
+Simone;Alessandrini;SAlessandrini;(Inserire pw);Roma;bigliettaio
+Sara;Stefanizzi;SStefanizzi;(Inserire pw);Rimini;bigliettaio
+Gianmarco;Tocco;GTocco;(Inserire pw);Roma;bigliettaio
