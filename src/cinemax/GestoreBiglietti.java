@@ -75,8 +75,7 @@ public class GestoreBiglietti {
     LocalDateTime adesso = LocalDateTime.now();
     if (!vecchioSpettacolo.getDataOra().isAfter(adesso) ||
     !nuovoSpettacolo.getDataOra().isAfter(adesso)) {
-    System.out.println("La modifica e' possibile solo se sia la vecchia sia la nuova data sono
-    future.");
+    System.out.println("La modifica e' possibile solo se sia la vecchia sia la nuova data sono future.");
     return false;
     }
     int liberi = gestoreSpettacoli.postiLiberi(nuovoTitolo, nuovaDataOra);
