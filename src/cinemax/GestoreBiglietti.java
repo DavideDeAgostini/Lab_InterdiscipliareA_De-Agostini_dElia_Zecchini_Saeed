@@ -55,39 +55,39 @@ public class GestoreBiglietti {
         return codice;
     }
 
- /**
- * Cambia la proiezione associata a una prenotazione, a patto che sia la
- * vecchia sia la nuova proiezione abbiano data successiva a oggi.
- */
+    /**
+     * Cambia la proiezione associata a una prenotazione, a patto che sia la
+     * vecchia sia la nuova proiezione abbiano data successiva a oggi.
+     */
     public boolean modificaPrenotazione(String codice, String nuovoTitolo, LocalDateTime nuovaDataOra) {
-    Biglietto biglietto = archivioBiglietti.trovaPerCodice(codice);
-    if (biglietto == null) {
-    System.out.println("Prenotazione non trovata.");
-    return false;
-    }
-    Spettacolo vecchioSpettacolo = archivioSpettacoli.trovaPerChiave(biglietto.getTitoloFilm(),
-    biglietto.getDataOraSpettacolo());
-    Spettacolo nuovoSpettacolo = archivioSpettacoli.trovaPerChiave(nuovoTitolo, nuovaDataOra);
-    if (vecchioSpettacolo == null || nuovoSpettacolo == null) {
-    System.out.println("Proiezione non trovata.");
-    return false;
-    }
-    LocalDateTime adesso = LocalDateTime.now();
-    if (!vecchioSpettacolo.getDataOra().isAfter(adesso) ||
-    !nuovoSpettacolo.getDataOra().isAfter(adesso)) {
-    System.out.println("La modifica e' possibile solo se sia la vecchia sia la nuova data sono future.");
-    return false;
-    }
-    int liberi = gestoreSpettacoli.postiLiberi(nuovoTitolo, nuovaDataOra);
-    if (biglietto.getNumeroPosti() > liberi) {
-    System.out.println("Posti non disponibili nella nuova proiezione.");
-    return false;
-    }
-    biglietto.setTitoloFilm(nuovoSpettacolo.getFilm().getTitolo());
-    biglietto.setDataOraSpettacolo(nuovoSpettacolo.getDataOra());
-    biglietto.setCostoUnitario(nuovoSpettacolo.getPrezzoBiglietto());
-    archivioBiglietti.salvaSuFile();
-    return true;
+        Biglietto biglietto = archivioBiglietti.trovaPerCodice(codice);
+        if (biglietto == null) {
+            System.out.println("Prenotazione non trovata.");
+            return false;
+        }
+        Spettacolo vecchioSpettacolo = archivioSpettacoli.trovaPerChiave(biglietto.getTitoloFilm(),
+                biglietto.getDataOraSpettacolo());
+        Spettacolo nuovoSpettacolo = archivioSpettacoli.trovaPerChiave(nuovoTitolo, nuovaDataOra);
+        if (vecchioSpettacolo == null || nuovoSpettacolo == null) {
+            System.out.println("Proiezione non trovata.");
+            return false;
+        }
+        LocalDateTime adesso = LocalDateTime.now();
+        if (!vecchioSpettacolo.getDataOra().isAfter(adesso) ||
+                !nuovoSpettacolo.getDataOra().isAfter(adesso)) {
+            System.out.println("La modifica e' possibile solo se sia la vecchia sia la nuova data sono future.");
+            return false;
+        }
+        int liberi = gestoreSpettacoli.postiLiberi(nuovoTitolo, nuovaDataOra);
+        if (biglietto.getNumeroPosti() > liberi) {
+            System.out.println("Posti non disponibili nella nuova proiezione.");
+            return false;
+        }
+        biglietto.setTitoloFilm(nuovoSpettacolo.getFilm().getTitolo());
+        biglietto.setDataOraSpettacolo(nuovoSpettacolo.getDataOra());
+        biglietto.setCostoUnitario(nuovoSpettacolo.getPrezzoBiglietto());
+        archivioBiglietti.salvaSuFile();
+        return true;
     }
 
     /**

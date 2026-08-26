@@ -36,49 +36,50 @@ public class ArchivioAccount {
         caricaDaFile();
     }
 
- public void caricaDaFile() {
- elenco = new Account[10];
- quantita = 0;
- File file = new File(percorsoFile);
- if (!file.exists()) {
- System.out.println("File utenti non trovato: " + percorsoFile);
- return;
- }
- try (BufferedReader lettore = new BufferedReader(
- new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
- String riga;
- boolean primaRiga = true;
- while ((riga = lettore.readLine()) != null) {
- if (riga.trim().isEmpty()) {
- continue;
- }
- try {
- String[] campi = CsvUtile.dividiRiga(riga);
- String testoDataNascita = campi[4].trim();
- LocalDate dataNascita;
- if (testoDataNascita.isEmpty()) {
- dataNascita = null;
- } else {
- dataNascita = LocalDate.parse(testoDataNascita);
- }
- Account account = new Account(campi[0], campi[1], campi[2], campi[3], dataNascita,
-    campi[5], campi[6]);
- aggiungiInMemoria(account);
- } catch (Exception rigaNonValida) {
- if (primaRiga) {
- // riga di intestazione (la data_nascita letterale non e' una data valida): si ignora senza avviso
-    primaRiga = false;
- continue;
- }
- System.out.println("Riga utenti ignorata (formato non valido): " + riga);
- }
- primaRiga = false;
- }
- } catch (IOException erroreLettura) {
- System.out.println("Errore durante la lettura di " + percorsoFile + ": " +
-erroreLettura.getMessage());
- }
- }
+    public void caricaDaFile() {
+        elenco = new Account[10];
+        quantita = 0;
+        File file = new File(percorsoFile);
+        if (!file.exists()) {
+            System.out.println("File utenti non trovato: " + percorsoFile);
+            return;
+        }
+        try (BufferedReader lettore = new BufferedReader(
+                new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+            String riga;
+            boolean primaRiga = true;
+            while ((riga = lettore.readLine()) != null) {
+                if (riga.trim().isEmpty()) {
+                    continue;
+                }
+                try {
+                    String[] campi = CsvUtile.dividiRiga(riga);
+                    String testoDataNascita = campi[4].trim();
+                    LocalDate dataNascita;
+                    if (testoDataNascita.isEmpty()) {
+                        dataNascita = null;
+                    } else {
+                        dataNascita = LocalDate.parse(testoDataNascita);
+                    }
+                    Account account = new Account(campi[0], campi[1], campi[2], campi[3], dataNascita,
+                            campi[5], campi[6]);
+                    aggiungiInMemoria(account);
+                } catch (Exception rigaNonValida) {
+                    if (primaRiga) {
+                        // riga di intestazione (la data_nascita letterale non e' una data valida): si
+                        // ignora senza avviso
+                        primaRiga = false;
+                        continue;
+                    }
+                    System.out.println("Riga utenti ignorata (formato non valido): " + riga);
+                }
+                primaRiga = false;
+            }
+        } catch (IOException erroreLettura) {
+            System.out.println("Errore durante la lettura di " + percorsoFile + ": " +
+                    erroreLettura.getMessage());
+        }
+    }
 
     /**
      * Riscrive interamente il file a partire dall'elenco in memoria, con la riga di
