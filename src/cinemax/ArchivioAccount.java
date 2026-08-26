@@ -66,8 +66,7 @@ public class ArchivioAccount {
  aggiungiInMemoria(account);
  } catch (Exception rigaNonValida) {
  if (primaRiga) {
- // riga di intestazione (la data_nascita letterale non e' una data valida): si
-    ignora senza avviso
+ // riga di intestazione (la data_nascita letterale non e' una data valida): si ignora senza avviso
     primaRiga = false;
  continue;
  }

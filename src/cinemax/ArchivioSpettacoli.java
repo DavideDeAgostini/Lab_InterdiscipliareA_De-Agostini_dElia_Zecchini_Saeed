@@ -66,9 +66,9 @@ public class ArchivioSpettacoli {
                     aggiungiInMemoria(spettacolo);
                 } catch (Exception rigaNonValida) {
                     if (primaRiga) {
-                        // probabile riga di intestazione (es. file fornito dal docente): si ignora
-                        // senza
-                        avviso primaRiga = false;
+                        // probabile riga di intestazione (es. file fornito dal docente): si ignora senza avviso
+                        
+                        primaRiga = false;
                         continue;
                     }
                     System.out.println("Riga proiezioni ignorata (formato non valido): " + riga);
