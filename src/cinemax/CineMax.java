@@ -1,8 +1,3 @@
-<<<<<<< Updated upstream
-public class main {
-    
-}
-=======
 package cinemax;
 
 import java.util.Scanner;
@@ -49,6 +44,5 @@ public class CineMax {
         // Chiusura delle risorse al termine dell'esecuzione
         tastiera.close();
         System.out.println("Arrivederci!");
- }
+    }
 }
->>>>>>> Stashed changes
