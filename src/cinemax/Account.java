@@ -17,27 +17,27 @@ import java.time.LocalDate;
  * @author Martina Zecchini 765842 (CO)
  */
 public class Account {
-    //Costanti per la definizione dei ruoli utente ammessi nel sistema
-    //Costante per il ruolo di tipo SPETTATORE
+    /** Costanti per la definizione dei ruoli utente ammessi nel sistema */
+    /** Costante per il ruolo di tipo SPETTATORE */
     public static final String SPETTATORE = "SPETTATORE";
-    //Costante per il ruolo di tipo OPERATORE
+    /** Costante per il ruolo di tipo OPERATORE */
     public static final String OPERATORE = "OPERATORE";
-    //Costante per il ruolo di tipo CASSIERE
+    /** Costante per il ruolo di tipo CASSIERE */
     public static final String CASSIERE = "CASSIERE";
-    //Attributi dell'account
-    //Nome utente
+    /** Attributi dell'account */
+    /** Nome utente */
     private String nome;
-    //Cognome utente
+    /** Cognome utente */
     private String cognome;
-    //Username univoco per effettuare il login
+    /** Username univoco per effettuare il login */
     private String username;
-    //Password cifrata (Hash) per effettuare l'autenticazione in maniera sicura
+    /** Password cifrata (Hash) per effettuare l'autenticazione in maniera sicura */
     private String passwordCifrata;
-    //Data di nascita dell'utente (QUesta è facoltativa e può essere null) 
+    /** Data di nascita dell'utente (QUesta è facoltativa e può essere null) */
     private LocalDate dataNascita; // puo' essere null: e' facoltativa
-    //Indirizzo di domicilio dell'utente
+    /** Indirizzo di domicilio dell'utente */
     private String domicilio;
-    //Ruolo assegnato all'utente (Spettatore, operatore o cassiere)
+    /**Ruolo assegnato all'utente (Spettatore, operatore o cassiere) */
     private String ruolo;
 
     /**Costruttore completo per istanziare un nuovo Account.
