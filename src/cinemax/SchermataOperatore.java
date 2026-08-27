@@ -17,6 +17,7 @@ import java.util.Scanner;
  * @author Martina Zecchini
  */
 public class SchermataOperatore {
+
     private Scanner tastiera;
     private MotoreRicerca motoreRicerca;
     private GestoreSpettacoli gestoreSpettacoli;
@@ -38,9 +39,11 @@ public class SchermataOperatore {
             System.out.println("1. Aggiungi proiezione");
             System.out.println("2. Modifica proiezione");
             System.out.println("3. Elimina proiezione");
+            System.out.println("4. Visualizza palinsesto completo");
             System.out.println("0. Logout");
             System.out.print("Scelta: ");
             String scelta = tastiera.nextLine().trim();
+
             switch (scelta) {
                 case "1":
                     aggiungiProiezione();
@@ -50,6 +53,9 @@ public class SchermataOperatore {
                     break;
                 case "3":
                     eliminaProiezione();
+                    break;
+                case "4":
+                    stampaPalinsesto();
                     break;
                 case "0":
                     gestoreAccessi.logout();
@@ -82,6 +88,7 @@ public class SchermataOperatore {
         }
         System.out.print("Prezzo biglietto: ");
         double prezzo = leggiDouble();
+
         Pellicola film = new Pellicola(titolo, genere, regista, anno, durata, etaMinima);
         boolean aggiunta = gestoreSpettacoli.aggiungiProiezione(film, dataOra, prezzo);
         if (aggiunta) {
@@ -103,6 +110,7 @@ public class SchermataOperatore {
         }
         System.out.print("Nuovo prezzo: ");
         double prezzo = leggiDouble();
+
         boolean modificata = gestoreSpettacoli.modificaProiezione(
                 scelta.getFilm().getTitolo(), scelta.getDataOra(), nuovaDataOra, prezzo);
         if (modificata) {
@@ -116,8 +124,7 @@ public class SchermataOperatore {
         if (scelta == null) {
             return;
         }
-        boolean eliminata = gestoreSpettacoli.eliminaProiezione(scelta.getFilm().getTitolo(),
-                scelta.getDataOra());
+        boolean eliminata = gestoreSpettacoli.eliminaProiezione(scelta.getFilm().getTitolo(), scelta.getDataOra());
         if (eliminata) {
             System.out.println("Proiezione eliminata.");
         }
@@ -155,6 +162,29 @@ public class SchermataOperatore {
             return null;
         }
         return testo;
+    }
+
+    /**
+     * Mostra l'intero palinsesto in ordine cronologico, con l'indicazione se ogni
+     * proiezione e' futura o gia' passata.
+     */
+    private void stampaPalinsesto() {
+        Spettacolo[] palinsesto = gestoreSpettacoli.elencoPalinsesto();
+        if (palinsesto.length == 0) {
+            System.out.println("Nessuna proiezione in archivio.");
+            return;
+        }
+        LocalDateTime adesso = LocalDateTime.now();
+        for (int i = 0; i < palinsesto.length; i++) {
+            Spettacolo spettacolo = palinsesto[i];
+            String stato;
+            if (spettacolo.getDataOra().isBefore(adesso)) {
+                stato = "[PASSATA]";
+            } else {
+                stato = "[FUTURA]";
+            }
+            System.out.println(stato + " " + spettacolo);
+        }
     }
 
     private int leggiIntero() {

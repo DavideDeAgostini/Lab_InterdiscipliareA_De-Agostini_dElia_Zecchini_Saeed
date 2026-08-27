@@ -22,6 +22,7 @@ import java.util.Scanner;
  * @author Martina Zecchini
  */
 public class SchermataOspite {
+
     private Scanner tastiera;
     private MotoreRicerca motoreRicerca;
     private GestoreSpettacoli gestoreSpettacoli;
@@ -35,18 +36,20 @@ public class SchermataOspite {
     public void avvia() {
         System.out.print("Inserisci il titolo (anche parziale) di un film per iniziare: ");
         String titoloIniziale = tastiera.nextLine().trim();
-        Spettacolo[] ultimiRisultati = motoreRicerca.cercaProiezione(titoloIniziale, null, null, null, null,
-                null);
+        Spettacolo[] ultimiRisultati = motoreRicerca.cercaProiezione(titoloIniziale, null, null, null, null, null);
         stampaRisultatiNumerati(ultimiRisultati);
+
         boolean continuare = true;
         while (continuare) {
             System.out.println();
             System.out.println("=== MENU OSPITE ===");
             System.out.println("1. Cerca proiezioni (altri criteri)");
             System.out.println("2. Visualizza dettagli di una proiezione (scegli dall'elenco sopra)");
+            System.out.println("3. Lista completa delle proiezioni future");
             System.out.println("0. Torna al menu principale");
             System.out.print("Scelta: ");
             String scelta = tastiera.nextLine().trim();
+
             switch (scelta) {
                 case "1":
                     ultimiRisultati = eseguiRicercaAvanzata();
@@ -54,6 +57,10 @@ public class SchermataOspite {
                     break;
                 case "2":
                     visualizzaDettaglio(ultimiRisultati);
+                    break;
+                case "3":
+                    ultimiRisultati = gestoreSpettacoli.elencoProiezioniFuture();
+                    stampaRisultatiNumerati(ultimiRisultati);
                     break;
                 case "0":
                     continuare = false;
@@ -77,8 +84,8 @@ public class SchermataOspite {
         Double prezzoMinimo = leggiPrezzoOpzionale();
         System.out.print("Prezzo massimo (invio per saltare): ");
         Double prezzoMassimo = leggiPrezzoOpzionale();
-        return motoreRicerca.cercaProiezione(titolo, genere, dataInizio, dataFine, prezzoMinimo,
-                prezzoMassimo);
+
+        return motoreRicerca.cercaProiezione(titolo, genere, dataInizio, dataFine, prezzoMinimo, prezzoMassimo);
     }
 
     private void visualizzaDettaglio(Spettacolo[] risultati) {
@@ -114,8 +121,8 @@ public class SchermataOspite {
         System.out.println("Eta' minima: " + spettacolo.getFilm().getEtaMinima());
         System.out.println("Data e ora: " + spettacolo.getDataOra().format(Spettacolo.FORMATO_SCRITTURA));
         System.out.println("Prezzo biglietto: " + spettacolo.getPrezzoBiglietto() + " EUR");
-        System.out.println("Posti liberi: " +
-                gestoreSpettacoli.postiLiberi(spettacolo.getFilm().getTitolo(), spettacolo.getDataOra()));
+        System.out.println("Posti liberi: "
+                + gestoreSpettacoli.postiLiberi(spettacolo.getFilm().getTitolo(), spettacolo.getDataOra()));
     }
 
     private String leggiOpzionale() {

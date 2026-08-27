@@ -14,8 +14,10 @@ import java.time.LocalDateTime;
  * @author Martina Zecchini
  */
 public class GestoreSpettacoli {
+
     /** Capienza fissa della sala, come da specifiche di progetto. */
     public static final int CAPIENZA_SALA = 200;
+
     private ArchivioSpettacoli archivioSpettacoli;
     private ArchivioBiglietti archivioBiglietti;
 
@@ -53,8 +55,7 @@ public class GestoreSpettacoli {
             Spettacolo altra = esistenti[i];
             LocalDateTime inizioAltra = altra.getDataOra();
             LocalDateTime fineAltra = altra.getDataOraFine();
-            boolean sovrapposte = inizioCandidata.isBefore(fineAltra) &&
-                    inizioAltra.isBefore(fineCandidata);
+            boolean sovrapposte = inizioCandidata.isBefore(fineAltra) && inizioAltra.isBefore(fineCandidata);
             if (sovrapposte) {
                 return true;
             }
@@ -102,8 +103,7 @@ public class GestoreSpettacoli {
     private boolean esistonoPrenotazioniPer(String titolo, LocalDateTime dataOra) {
         Biglietto[] tutti = archivioBiglietti.elencoTutti();
         for (int i = 0; i < tutti.length; i++) {
-            if (tutti[i].getTitoloFilm().equalsIgnoreCase(titolo) &&
-                    tutti[i].getDataOraSpettacolo().equals(dataOra)) {
+            if (tutti[i].getTitoloFilm().equalsIgnoreCase(titolo) && tutti[i].getDataOraSpettacolo().equals(dataOra)) {
                 return true;
             }
         }
@@ -122,11 +122,63 @@ public class GestoreSpettacoli {
         int postiOccupati = 0;
         Biglietto[] tutti = archivioBiglietti.elencoTutti();
         for (int i = 0; i < tutti.length; i++) {
-            if (tutti[i].getTitoloFilm().equalsIgnoreCase(titolo) &&
-                    tutti[i].getDataOraSpettacolo().equals(dataOra)) {
+            if (tutti[i].getTitoloFilm().equalsIgnoreCase(titolo) && tutti[i].getDataOraSpettacolo().equals(dataOra)) {
                 postiOccupati += tutti[i].getNumeroPosti();
             }
         }
         return CAPIENZA_SALA - postiOccupati;
+    }
+
+    /**
+     * Restituisce l'intero palinsesto (tutte le proiezioni presenti in
+     * archivio), ordinato cronologicamente dalla data/ora piu' vicina nel
+     * passato/futuro fino alla piu' lontana. L'ordinamento e' fatto con una
+     * selection sort su un array copia (nessuna modifica all'archivio):
+     * semplice da spiegare e, per le dimensioni tipiche di un palinsesto
+     * (anche alcune migliaia di proiezioni), abbastanza veloce da non essere
+     * un problema.
+     */
+    public Spettacolo[] elencoPalinsesto() {
+        Spettacolo[] elenco = archivioSpettacoli.elencoTutti();
+        for (int i = 0; i < elenco.length - 1; i++) {
+            int indiceMinimo = i;
+            for (int j = i + 1; j < elenco.length; j++) {
+                if (elenco[j].getDataOra().isBefore(elenco[indiceMinimo].getDataOra())) {
+                    indiceMinimo = j;
+                }
+            }
+            if (indiceMinimo != i) {
+                Spettacolo temporaneo = elenco[i];
+                elenco[i] = elenco[indiceMinimo];
+                elenco[indiceMinimo] = temporaneo;
+            }
+        }
+        return elenco;
+    }
+
+    /**
+     * Restituisce solo le proiezioni future (data/ora successiva all'istante
+     * corrente), ordinate cronologicamente dalla piu' vicina alla piu'
+     * lontana. Pensata per l'ospite: una lista pronta da consultare senza
+     * dover impostare criteri di ricerca.
+     */
+    public Spettacolo[] elencoProiezioniFuture() {
+        Spettacolo[] tutte = elencoPalinsesto();
+        LocalDateTime adesso = LocalDateTime.now();
+        int conteggio = 0;
+        for (int i = 0; i < tutte.length; i++) {
+            if (tutte[i].getDataOra().isAfter(adesso)) {
+                conteggio++;
+            }
+        }
+        Spettacolo[] future = new Spettacolo[conteggio];
+        int indice = 0;
+        for (int i = 0; i < tutte.length; i++) {
+            if (tutte[i].getDataOra().isAfter(adesso)) {
+                future[indice] = tutte[i];
+                indice++;
+            }
+        }
+        return future;
     }
 }

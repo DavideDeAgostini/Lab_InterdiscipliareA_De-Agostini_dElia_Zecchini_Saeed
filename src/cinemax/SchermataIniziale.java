@@ -14,6 +14,7 @@ import java.util.Scanner;
  * @author Martina Zecchini
  */
 public class SchermataIniziale {
+
     private Scanner tastiera;
     private GestoreAccessi gestoreAccessi;
     private GestoreSpettacoli gestoreSpettacoli;
@@ -40,6 +41,7 @@ public class SchermataIniziale {
             System.out.println("0. Esci");
             System.out.print("Scelta: ");
             String scelta = tastiera.nextLine().trim();
+
             switch (scelta) {
                 case "1":
                     effettuaLogin();
@@ -64,10 +66,12 @@ public class SchermataIniziale {
         String username = tastiera.nextLine().trim();
         System.out.print("Password: ");
         String password = tastiera.nextLine();
+
         Account account = gestoreAccessi.login(username, password);
         if (account == null) {
             return;
         }
+
         System.out.println("Benvenuto/a " + account.getNome() + "!");
         String ruolo = account.getRuolo();
         if (Account.SPETTATORE.equals(ruolo)) {
@@ -76,7 +80,7 @@ public class SchermataIniziale {
         } else if (Account.OPERATORE.equals(ruolo)) {
             new SchermataOperatore(tastiera, motoreRicerca, gestoreSpettacoli, gestoreAccessi).avvia();
         } else if (Account.CASSIERE.equals(ruolo)) {
-            new SchermataCassiere(tastiera, motoreRicerca, gestoreAccessi).avvia();
+            new SchermataCassiere(tastiera, motoreRicerca, gestoreBiglietti, gestoreAccessi).avvia();
         } else {
             System.out.println("Ruolo non riconosciuto.");
         }
@@ -95,8 +99,8 @@ public class SchermataIniziale {
         LocalDate dataNascita = leggiDataNascitaOpzionale();
         System.out.print("Domicilio: ");
         String domicilio = tastiera.nextLine().trim();
-        boolean creato = gestoreAccessi.registraCliente(nome, cognome, username, password, dataNascita,
-                domicilio);
+
+        boolean creato = gestoreAccessi.registraCliente(nome, cognome, username, password, dataNascita, domicilio);
         if (creato) {
             System.out.println("Registrazione completata! Ora puoi effettuare il login.");
         }

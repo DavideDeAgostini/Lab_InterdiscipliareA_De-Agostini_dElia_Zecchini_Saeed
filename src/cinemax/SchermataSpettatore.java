@@ -18,6 +18,7 @@ import java.util.Scanner;
  * @author Martina Zecchini
  */
 public class SchermataSpettatore {
+
     private Scanner tastiera;
     private Account account;
     private MotoreRicerca motoreRicerca;
@@ -49,6 +50,7 @@ public class SchermataSpettatore {
             System.out.println("0. Logout");
             System.out.print("Scelta: ");
             String scelta = tastiera.nextLine().trim();
+
             switch (scelta) {
                 case "1":
                     cercaProiezioni();
@@ -168,8 +170,7 @@ public class SchermataSpettatore {
         for (int i = 0; i < risultati.length; i++) {
             Spettacolo spettacolo = risultati[i];
             System.out.println((i + 1) + ". " + spettacolo + " - posti liberi: "
-                    + gestoreSpettacoli.postiLiberi(spettacolo.getFilm().getTitolo(),
-                            spettacolo.getDataOra()));
+                    + gestoreSpettacoli.postiLiberi(spettacolo.getFilm().getTitolo(), spettacolo.getDataOra()));
         }
     }
 

@@ -1,5 +1,6 @@
 package cinemax;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
  * @author Martina Zecchini
  */
 public class GestoreBiglietti {
+
     private ArchivioBiglietti archivioBiglietti;
     private ArchivioSpettacoli archivioSpettacoli;
     private GestoreSpettacoli gestoreSpettacoli;
@@ -44,8 +46,7 @@ public class GestoreBiglietti {
         }
         int liberi = gestoreSpettacoli.postiLiberi(titoloProiezione, dataOraProiezione);
         if (numeroPosti > liberi) {
-            System.out.println("Posti non disponibili: richiesti " + numeroPosti + ", liberi " + liberi +
-                    ".");
+            System.out.println("Posti non disponibili: richiesti " + numeroPosti + ", liberi " + liberi + ".");
             return null;
         }
         String codice = GeneratoreCodice.generaCodicePrenotazione(archivioBiglietti.elencoTutti());
@@ -73,8 +74,7 @@ public class GestoreBiglietti {
             return false;
         }
         LocalDateTime adesso = LocalDateTime.now();
-        if (!vecchioSpettacolo.getDataOra().isAfter(adesso) ||
-                !nuovoSpettacolo.getDataOra().isAfter(adesso)) {
+        if (!vecchioSpettacolo.getDataOra().isAfter(adesso) || !nuovoSpettacolo.getDataOra().isAfter(adesso)) {
             System.out.println("La modifica e' possibile solo se sia la vecchia sia la nuova data sono future.");
             return false;
         }
@@ -131,5 +131,52 @@ public class GestoreBiglietti {
             }
         }
         return risultato;
+    }
+
+    /**
+     * Restituisce le prenotazioni relative a proiezioni che si tengono
+     * nella giornata odierna (stesso giorno di calendario di
+     * LocalDate.now()), ordinate per orario di proiezione. Pensata per il
+     * bigliettaio.
+     */
+    public Biglietto[] prenotazioniDiOggi() {
+        Biglietto[] tutti = archivioBiglietti.elencoTutti();
+        LocalDate oggi = LocalDate.now();
+        int conteggio = 0;
+        for (int i = 0; i < tutti.length; i++) {
+            if (tutti[i].getDataOraSpettacolo().toLocalDate().equals(oggi)) {
+                conteggio++;
+            }
+        }
+        Biglietto[] risultato = new Biglietto[conteggio];
+        int indice = 0;
+        for (int i = 0; i < tutti.length; i++) {
+            if (tutti[i].getDataOraSpettacolo().toLocalDate().equals(oggi)) {
+                risultato[indice] = tutti[i];
+                indice++;
+            }
+        }
+        ordinaPerDataSpettacolo(risultato);
+        return risultato;
+    }
+
+    /**
+     * Ordina un array di Biglietto per data/ora della proiezione (selection sort,
+     * in place).
+     */
+    private void ordinaPerDataSpettacolo(Biglietto[] elenco) {
+        for (int i = 0; i < elenco.length - 1; i++) {
+            int indiceMinimo = i;
+            for (int j = i + 1; j < elenco.length; j++) {
+                if (elenco[j].getDataOraSpettacolo().isBefore(elenco[indiceMinimo].getDataOraSpettacolo())) {
+                    indiceMinimo = j;
+                }
+            }
+            if (indiceMinimo != i) {
+                Biglietto temporaneo = elenco[i];
+                elenco[i] = elenco[indiceMinimo];
+                elenco[indiceMinimo] = temporaneo;
+            }
+        }
     }
 }
