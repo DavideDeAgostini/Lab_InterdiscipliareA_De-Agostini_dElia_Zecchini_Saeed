@@ -21,12 +21,12 @@ public class CineMax {
     public static void main(String[] args) {
         String cartellaDati = "data";
 
-        // Inizializzazione degli archivi per la persistenza su file CSV
+        /**  Inizializzazione degli archivi per la persistenza su file CSV */
         ArchivioSpettacoli archivioSpettacoli = new ArchivioSpettacoli(cartellaDati + "/proiezioni.csv");
         ArchivioBiglietti archivioBiglietti = new ArchivioBiglietti(cartellaDati + "/prenotazioni.csv");
         ArchivioAccount archivioAccount = new ArchivioAccount(cartellaDati + "/utenti.csv");
 
-        // Inizializzazione dei moduli per la logica applicativa
+        /** Inizializzazione dei moduli per la logica applicativa*/ 
         GestoreSpettacoli gestoreSpettacoli = new GestoreSpettacoli(archivioSpettacoli, archivioBiglietti);
         GestoreBiglietti gestoreBiglietti = new GestoreBiglietti(archivioBiglietti, archivioSpettacoli,
                 gestoreSpettacoli);
@@ -34,14 +34,14 @@ public class CineMax {
         MotoreRicerca motoreRicerca = new MotoreRicerca(archivioSpettacoli, archivioBiglietti,
                 archivioAccount);
 
-        // Configurazione dello scanner di input e avvio del menu a riga di comando
+        /** Configurazione dello scanner di input e avvio del menu a riga di comando*/
         Scanner tastiera = new Scanner(System.in);
         SchermataIniziale schermataIniziale = new SchermataIniziale(
                 tastiera, gestoreAccessi, gestoreSpettacoli, gestoreBiglietti, motoreRicerca);
         
         schermataIniziale.avvia();
 
-        // Chiusura delle risorse al termine dell'esecuzione
+        /**  Chiusura delle risorse al termine dell'esecuzione */
         tastiera.close();
         System.out.println("Arrivederci!");
     }
