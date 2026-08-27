@@ -1,0 +1,139 @@
+package cinemax;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+/**
+ * Rappresenta una singola proiezione: un film, in una certa data/ora, a un
+ * certo prezzo. Usa direttamente {@link LocalDateTime} della libreria
+ * standard invece di una classe scritta apposta.
+ * <p>
+ * Non esiste un id numerico: una proiezione e' identificata univocamente
+ * dalla coppia (titolo del film, data/ora), che funge da chiave composta.
+ * Questo funziona perche' modificaProiezione() ed eliminaProiezione() sono
+ * permesse solo quando non esistono prenotazioni collegate: quindi, quando
+ * una prenotazione fa riferimento a una proiezione, quella proiezione non
+ * puo' piu' cambiare titolo o data/ora, e il riferimento resta sempre valido.
+ * <p>
+ * Il calcolo dei posti liberi non e' responsabilita' di questa classe
+ * (richiederebbe di conoscere le prenotazioni): se ne occupa il
+ * GestoreSpettacoli.
+ *
+ * @author Davide De Agostini 766294 (CO)
+ * @author Luigi d'Elia 765969 (CO)
+ * @author Ahsan Saeed 767241 (CO)
+ * @author Martina Zecchini 765842 (CO)
+ */
+public class Spettacolo {
+
+    /** Formato usato in lettura: i secondi sono opzionali. */
+    public static final DateTimeFormatter FORMATO_LETTURA = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm[:ss]");
+
+    /** Formato standard usato in scrittura e per la visualizzazione a schermo. */
+    public static final DateTimeFormatter FORMATO_SCRITTURA = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+    /** Riferimento alla pellicola/film associato a questo spettacolo. */
+    private Pellicola film;
+
+    /** Data e orario di inizio della proiezione. */
+    private LocalDateTime dataOra;
+
+    /** Costo del singolo biglietto per questo spettacolo. */
+    private double prezzoBiglietto;
+
+    /**
+     * Costruttore completo per inizializzare un nuovo spettacolo.
+     */
+    public Spettacolo(Pellicola film, LocalDateTime dataOra, double prezzoBiglietto) {
+        this.film = film;
+        this.dataOra = dataOra;
+        this.prezzoBiglietto = prezzoBiglietto;
+    }
+
+    /**
+     * Restituisce l'oggetto Pellicola proiettato.
+     */
+    public Pellicola getFilm() {
+        return film;
+    }
+
+    /**
+     * Imposta la pellicola da associare allo spettacolo.
+     */
+    public void setFilm(Pellicola film) {
+        this.film = film;
+    }
+
+    /**
+     * Restituisce la data e l'ora di inizio dello spettacolo.
+     */
+    public LocalDateTime getDataOra() {
+        return dataOra;
+    }
+
+    /**
+     * Imposta la data e l'ora di inizio dello spettacolo.
+     */
+    public void setDataOra(LocalDateTime dataOra) {
+        this.dataOra = dataOra;
+    }
+
+    /**
+     * Restituisce il costo unitario del biglietto.
+     */
+    public double getPrezzoBiglietto() {
+        return prezzoBiglietto;
+    }
+
+    /**
+     * Imposta il prezzo del biglietto.
+     */
+    public void setPrezzoBiglietto(double prezzoBiglietto) {
+        this.prezzoBiglietto = prezzoBiglietto;
+    }
+
+    /**
+     * Restituisce l'istante di fine proiezione calcolato sommando la durata del film all'orario di inizio.
+     */
+    public LocalDateTime getDataOraFine() {
+        return dataOra.plusMinutes(film.getDurataMinuti());
+    }
+
+    /**
+     * Verifica la corrispondenza con la chiave composta (titolo del film e data/ora).
+     */
+    public boolean corrispondeA(String titolo, LocalDateTime dataOra) {
+        if (titolo == null || dataOra == null) {
+            return false;
+        }
+        return film.getTitolo().equalsIgnoreCase(titolo) && this.dataOra.equals(dataOra);
+    }
+
+    /**
+     * Verifica l'uguaglianza logica tra due spettacoli basandosi sulla chiave composta (titolo e data/ora).
+     */
+    @Override
+    public boolean equals(Object altro) {
+        if (!(altro instanceof Spettacolo)) {
+            return false;
+        }
+        Spettacolo altraProiezione = (Spettacolo) altro;
+        return corrispondeA(altraProiezione.getFilm().getTitolo(), altraProiezione.getDataOra());
+    }
+
+    /**
+     * Calcola il valore hash coerentemente con i campi usati nel metodo equals.
+     */
+    @Override
+    public int hashCode() {
+        return film.getTitolo().toLowerCase().hashCode() * 31 + dataOra.hashCode();
+    }
+
+    /**
+     * Restituisce la rappresentazione in formato testuale dello spettacolo.
+     */
+    @Override
+    public String toString() {
+        return film.getTitolo() + " - " + dataOra.format(FORMATO_SCRITTURA) + " - " + prezzoBiglietto + " EUR";
+    }
+}
