@@ -60,79 +60,79 @@ public class Account {
         this.ruolo = ruolo;
     }
 
-    //Metodi getter e setter
+    /**Metodi getter e setter*/
 
-    //Restituisce il nome dell'utente
+    /**Restituisce il nome dell'utente*/
     public String getNome() {
         return nome;
     }
 
-    //Imposta il nome dell'utente da assegnare
+    /**Imposta il nome dell'utente da assegnare*/
     public void setNome(String nome) {
         this.nome = nome;
     }
 
-    //Restituisce il cognome dell'utente
+    /**Restituisce il cognome dell'utente*/
     public String getCognome() {
         return cognome;
     }
 
-    //Imposta il cognome dell'utente
+    /**Imposta il cognome dell'utente*/
     public void setCognome(String cognome) {
         this.cognome = cognome;
     }
 
-    //Restituisce lo username dell'utente
+    /**Restituisce lo username dell'utente*/
     public String getUsername() {
         return username;
     }
 
-    //Imposta lo username dell'utente
+    /**Imposta lo username dell'utente*/
     public void setUsername(String username) {
         this.username = username;
     }
 
-    //Restituisce la password cifrata dell'utente
+    /**Restituisce la password cifrata dell'utente*/
     public String getPasswordCifrata() {
         return passwordCifrata;
     }
 
-    //Imposta la password dell'utente
+    /**Imposta la password dell'utente*/
     public void setPasswordCifrata(String passwordCifrata) {
         this.passwordCifrata = passwordCifrata;
     }
 
-    //Restituisce la data di nascita dell'utente 
+    /**Restituisce la data di nascita dell'utente */
     public LocalDate getDataNascita() {
         return dataNascita;
     }
 
-    //imposta la data di nascita dell'utente
+    /** imposta la data di nascita dell'utente */
     public void setDataNascita(LocalDate dataNascita) {
         this.dataNascita = dataNascita;
     }
 
-    //Restituisce il domicilio dell'utente
+    /** Restituisce il domicilio dell'utente */
     public String getDomicilio() {
         return domicilio;
     }
 
-    //Imposta il domicilio dell'utente
+    /** Imposta il domicilio dell'utente */
     public void setDomicilio(String domicilio) {
         this.domicilio = domicilio;
     }
 
-    //Restituisce il ruolo dell'utente
+    /** Restituisce il ruolo dell'utente */
     public String getRuolo() {
         return ruolo;
     }
 
-    //Imposta il ruolo dell'utente
+    /** Imposta il ruolo dell'utente */
     public void setRuolo(String ruolo) {
         this.ruolo = ruolo;
     }
 
-    //Restituisce una rappresentazione testuale sintetica dell'account "Nome Cognome (Username, RUOLO)"
+    /** Restituisce una rappresentazione testuale sintetica dell'account "Nome Cognome (Username, RUOLO)" */
     @Override
     public String toString() {
         return nome + " " + cognome + " (" + username + ", " + ruolo + ")";
