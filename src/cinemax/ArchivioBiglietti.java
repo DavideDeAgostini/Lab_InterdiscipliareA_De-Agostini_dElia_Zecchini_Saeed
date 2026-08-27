@@ -20,10 +20,10 @@ import java.time.LocalDateTime;
  * costo_unitario. La proiezione e' referenziata con titolo+data/ora (chiave
  * composta) invece che con un id numerico.
  *
- * @author Davide De Agostini
- * @author Luigi d'Elia
- * @author Ahsan Saeed
- * @author Martina Zecchini
+ * @author Davide De Agostini 766294 (CO)
+ * @author Luigi d'Elia 765969 (CO)
+ * @author Ahsan Saeed 767241 (CO)
+ * @author Martina Zecchini 765842 (CO)
  */
 public class ArchivioBiglietti {
     private String percorsoFile;

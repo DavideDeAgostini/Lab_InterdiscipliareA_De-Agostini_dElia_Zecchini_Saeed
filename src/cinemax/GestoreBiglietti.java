@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
  * solo per proiezioni gia' passate (come da specifiche di progetto). Le
  * proiezioni sono referenziate con la loro chiave composta (titolo + data/ora).
  *
- * @author Davide De Agostini
- * @author Luigi d'Elia
- * @author Ahsan Saeed
- * @author Martina Zecchini
+ * @author Davide De Agostini 766294 (CO)
+ * @author Luigi d'Elia 765969 (CO)
+ * @author Ahsan Saeed 767241 (CO)
+ * @author Martina Zecchini 765842 (CO)
  */
 public class GestoreBiglietti {
 

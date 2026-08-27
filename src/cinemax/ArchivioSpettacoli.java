@@ -22,10 +22,10 @@ import java.time.LocalDateTime;
  * l'intestazione) viene scartata in silenzio, cosi' il caricamento funziona
  * sia sul file consegnato (con intestazione) sia su un eventuale file senza.
  *
- * @author Davide De Agostini
- * @author Luigi d'Elia
- * @author Ahsan Saeed
- * @author Martina Zecchini
+ * @author Davide De Agostini 766294 (CO)
+ * @author Luigi d'Elia 765969 (CO)
+ * @author Ahsan Saeed 767241 (CO)
+ * @author Martina Zecchini 765842 (CO)
  */
 public class ArchivioSpettacoli {
     private String percorsoFile;

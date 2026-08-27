@@ -11,10 +11,10 @@ import java.time.LocalDate;
  * La data di nascita e' facoltativa: usa direttamente {@link LocalDate}
  * della libreria standard e puo' essere null se non fornita.
  *
- * @author Davide De Agostini
- * @author Luigi d'Elia
- * @author Ahsan Saeed
- * @author Martina Zecchini
+ * @author Davide De Agostini 766294 (CO)
+ * @author Luigi d'Elia 765969 (CO)
+ * @author Ahsan Saeed 767241 (CO)
+ * @author Martina Zecchini 765842 (CO)
  */
 public class Account {
     public static final String SPETTATORE = "SPETTATORE";

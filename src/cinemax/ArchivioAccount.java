@@ -19,10 +19,10 @@ import java.time.LocalDate;
  * domicilio,ruolo. Deve gia' contenere 2 account OPERATORE e 5 account
  * CASSIERE, come richiesto dalle specifiche.
  *
- * @author Davide De Agostini
- * @author Luigi d'Elia
- * @author Ahsan Saeed
- * @author Martina Zecchini
+ * @author Davide De Agostini 766294 (CO)
+ * @author Luigi d'Elia 765969 (CO)
+ * @author Ahsan Saeed 767241 (CO)
+ * @author Martina Zecchini 765842 (CO)
  */
 public class ArchivioAccount {
     private String percorsoFile;

@@ -5,10 +5,10 @@ import java.time.LocalDate;
 /**
  * Gestisce login, registrazione e stato di sessione dell'utente corrente.
  *
- * @author Davide De Agostini
- * @author Luigi d'Elia
- * @author Ahsan Saeed
- * @author Martina Zecchini
+ * @author Davide De Agostini 766294 (CO)
+ * @author Luigi d'Elia 765969 (CO)
+ * @author Ahsan Saeed 767241 (CO)
+ * @author Martina Zecchini 765842 (CO)
  */
 public class GestoreAccessi {
     private ArchivioAccount archivioAccount;

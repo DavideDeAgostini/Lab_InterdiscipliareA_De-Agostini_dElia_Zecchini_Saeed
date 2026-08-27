@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
  * chiave composta (titolo del film + data/ora), esattamente come viene
  * identificata in Spettacolo.
  *
- * @author Davide De Agostini
- * @author Luigi d'Elia
- * @author Ahsan Saeed
- * @author Martina Zecchini
+ * @author Davide De Agostini 766294 (CO)
+ * @author Luigi d'Elia 765969 (CO)
+ * @author Ahsan Saeed 767241 (CO)
+ * @author Martina Zecchini 765842 (CO)
  */
 public class Biglietto {
     private String codice;
