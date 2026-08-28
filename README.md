@@ -18,10 +18,10 @@ Laboratorio Interdisciplinare A · a.a. 2025/2026 · Università degli Studi del
 
 | Nome | Matricola | Corso |
 |---|---|---|
-| Davide De Agostini | 766294 | CO |
-| Luigi d'Elia | 765969 | CO |
-| Martina Zecchini | 765842 | CO |
-| Ahsan Saeed | 767241 | CO |
+| Davide De Agostini (Project Manager)| 766294 | CO |
+| Luigi d'Elia (System Architect)| 765969 | CO |
+| Martina Zecchini (Document & quality manager) | 765842 | CO |
+| Ahsan Saeed (System Architect) | 767241 | CO |
 
 ---
 
