@@ -13,22 +13,33 @@ import java.time.LocalDate;
 
 /**
  * Gestisce la lettura, la scrittura e l'accesso in memoria agli account.
- * Il file data/utenti.csv viene consegnato gia' popolato (con le password
- * gia' cifrate), con una riga di intestazione in testa e poi una riga per
- * account, nel formato nome,cognome,username,password_cifrata,data_nascita,
- * domicilio,ruolo. Deve gia' contenere 2 account OPERATORE e 5 account
- * CASSIERE, come richiesto dalle specifiche.
+ * <p>
+ * Il file <code>data/utenti.csv</code> viene consegnato gia' popolato (con le
+ * password gia' cifrate), con una riga di intestazione in testa e poi una
+ * riga per account, nel formato
+ * <code>nome,cognome,username,password_cifrata,data_nascita,domicilio,ruolo</code>.
+ * Deve gia' contenere 2 account {@link Account#OPERATORE} e 5 account
+ * {@link Account#CASSIERE}, come richiesto dalle specifiche.
  *
- * @author Davide De Agostini 766294 (CO)
- * @author Luigi d'Elia 765969 (CO)
- * @author Ahsan Saeed 767241 (CO)
- * @author Martina Zecchini 765842 (CO)
+ * @author Davide De Agostini - Matricola 766294 - CO
+ * @author Luigi d'Elia - Matricola 765969 - CO
+ * @author Ahsan Saeed - Matricola 767241 - CO
+ * @author Martina Zecchini - Matricola 765842 - CO
  */
 public class ArchivioAccount {
+    /** Percorso del file CSV su cui l'archivio legge e scrive. */
     private String percorsoFile;
+    /** Array in memoria degli account caricati, ridimensionato dinamicamente. */
     private Account[] elenco;
+    /** Numero di account effettivamente occupati nell'array {@link #elenco}. */
     private int quantita;
 
+    /**
+     * Costruttore che imposta il percorso del file e carica subito gli account
+     * esistenti tramite {@link #caricaDaFile()}.
+     *
+     * @param percorsoFile il percorso del file CSV da usare per la persistenza
+     */
     public ArchivioAccount(String percorsoFile) {
         this.percorsoFile = percorsoFile;
         this.elenco = new Account[10];
@@ -36,6 +47,14 @@ public class ArchivioAccount {
         caricaDaFile();
     }
 
+    /**
+     * Legge il file CSV e ricostruisce l'elenco degli account in memoria.
+     * <p>
+     * La riga di intestazione viene riconosciuta tentando di interpretarla
+     * come dato: se il parsing fallisce (perche' contiene testo invece di una
+     * data valida) viene scartata senza avviso; le righe successive malformate
+     * vengono invece segnalate a schermo e ignorate.
+     */
     public void caricaDaFile() {
         elenco = new Account[10];
         quantita = 0;
@@ -82,8 +101,8 @@ public class ArchivioAccount {
     }
 
     /**
-     * Riscrive interamente il file a partire dall'elenco in memoria, con la riga di
-     * intestazione in testa.
+     * Riscrive interamente il file a partire dall'elenco in memoria, con la
+     * riga di intestazione in testa.
      */
     public void salvaSuFile() {
         try (BufferedWriter scrittore = new BufferedWriter(
@@ -111,6 +130,15 @@ public class ArchivioAccount {
         }
     }
 
+    /**
+     * Aggiunge un account all'array {@link #elenco} in memoria, raddoppiando
+     * la capacita' dell'array se necessario.
+     * <p>
+     * Non salva su file: e' un'operazione di solo supporto usata da
+     * {@link #caricaDaFile()} e da {@link #aggiungi(Account)}.
+     *
+     * @param account l'account da aggiungere in memoria
+     */
     private void aggiungiInMemoria(Account account) {
         if (quantita == elenco.length) {
             Account[] nuovoArray = new Account[elenco.length * 2];
@@ -123,6 +151,14 @@ public class ArchivioAccount {
         quantita++;
     }
 
+    /**
+     * Restituisce una copia di tutti gli account in memoria.
+     * <p>
+     * Viene restituita una copia per evitare che codice esterno modifichi
+     * l'array interno dell'archivio.
+     *
+     * @return un array con tutti gli account caricati
+     */
     public Account[] elencoTutti() {
         Account[] copia = new Account[quantita];
         for (int i = 0; i < quantita; i++) {
@@ -131,6 +167,13 @@ public class ArchivioAccount {
         return copia;
     }
 
+    /**
+     * Cerca un account per username, senza distinzione tra maiuscole e
+     * minuscole.
+     *
+     * @param username lo username da cercare
+     * @return l'account trovato, oppure null se nessun account corrisponde
+     */
     public Account trovaPerUsername(String username) {
         for (int i = 0; i < quantita; i++) {
             if (elenco[i].getUsername().equalsIgnoreCase(username)) {
@@ -140,6 +183,14 @@ public class ArchivioAccount {
         return null;
     }
 
+    /**
+     * Aggiunge un nuovo account sia in memoria sia su file.
+     * <p>
+     * Equivale a chiamare {@link #aggiungiInMemoria(Account)} seguito da
+     * {@link #salvaSuFile()}.
+     *
+     * @param account l'account da aggiungere
+     */
     public void aggiungi(Account account) {
         aggiungiInMemoria(account);
         salvaSuFile();

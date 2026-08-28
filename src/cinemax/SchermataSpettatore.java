@@ -12,20 +12,37 @@ import java.util.Scanner;
  * corrente, non un identificativo salvato su file (che resta la chiave
  * composta titolo+data/ora).
  *
- * @author Davide De Agostini 766294 (CO)
- * @author Luigi d'Elia 765969 (CO)
- * @author Ahsan Saeed 767241 (CO)
- * @author Martina Zecchini 765842 (CO)
+ * @author Davide De Agostini - Matricola 766294 - CO
+ * @author Luigi d'Elia - Matricola 765969 - CO
+ * @author Ahsan Saeed - Matricola 767241 - CO
+ * @author Martina Zecchini - Matricola 765842 - CO
  */
 public class SchermataSpettatore {
 
+    /** Il lettore da cui acquisire l'input dell'utente. */
     private Scanner tastiera;
+    /** L'account del cliente attualmente autenticato. */
     private Account account;
+    /** Il motore di ricerca usato per le ricerche di proiezioni. */
     private MotoreRicerca motoreRicerca;
+    /** Il gestore delle proiezioni, usato per il calcolo dei posti liberi. */
     private GestoreSpettacoli gestoreSpettacoli;
+    /** Il gestore delle prenotazioni, su cui vengono eseguite le operazioni del menu. */
     private GestoreBiglietti gestoreBiglietti;
+    /** Il gestore degli accessi, usato per il logout. */
     private GestoreAccessi gestoreAccessi;
 
+    /**
+     * Costruttore che collega la schermata al lettore di input, all'account
+     * del cliente e ai gestori necessari.
+     *
+     * @param tastiera          il lettore da cui acquisire l'input
+     * @param account           l'account del cliente autenticato
+     * @param motoreRicerca     il motore di ricerca per le proiezioni
+     * @param gestoreSpettacoli il gestore delle proiezioni
+     * @param gestoreBiglietti  il gestore delle prenotazioni
+     * @param gestoreAccessi    il gestore degli accessi, per il logout
+     */
     public SchermataSpettatore(Scanner tastiera, Account account, MotoreRicerca motoreRicerca,
             GestoreSpettacoli gestoreSpettacoli, GestoreBiglietti gestoreBiglietti,
             GestoreAccessi gestoreAccessi) {
@@ -37,6 +54,10 @@ public class SchermataSpettatore {
         this.gestoreAccessi = gestoreAccessi;
     }
 
+    /**
+     * Avvia il ciclo del menu cliente, mostrando le opzioni disponibili
+     * finche' l'utente non sceglie il logout.
+     */
     public void avvia() {
         boolean continuare = true;
         while (continuare) {
@@ -77,6 +98,10 @@ public class SchermataSpettatore {
         }
     }
 
+    /**
+     * Chiede un titolo (anche parziale) e stampa le proiezioni trovate
+     * tramite {@link MotoreRicerca#cercaProiezione}.
+     */
     private void cercaProiezioni() {
         System.out.print("Titolo (invio per saltare): ");
         String titolo = leggiOpzionale();
@@ -84,6 +109,11 @@ public class SchermataSpettatore {
         stampaRisultatiNumerati(risultati);
     }
 
+    /**
+     * Cerca e seleziona una proiezione tramite {@link #cercaESeleziona()},
+     * chiede il numero di posti desiderato e crea la prenotazione tramite
+     * {@link GestoreBiglietti#creaPrenotazione}.
+     */
     private void creaPrenotazione() {
         Spettacolo scelta = cercaESeleziona();
         if (scelta == null) {
@@ -104,6 +134,10 @@ public class SchermataSpettatore {
         }
     }
 
+    /**
+     * Stampa tutte le prenotazioni del cliente autenticato, ottenute tramite
+     * {@link GestoreBiglietti#prenotazioniDiCliente(String)}.
+     */
     private void visualizzaPrenotazioni() {
         Biglietto[] mie = gestoreBiglietti.prenotazioniDiCliente(account.getUsername());
         if (mie.length == 0) {
@@ -115,6 +149,11 @@ public class SchermataSpettatore {
         }
     }
 
+    /**
+     * Chiede il codice di una prenotazione esistente, cerca e seleziona la
+     * nuova proiezione tramite {@link #cercaESeleziona()} e applica la
+     * modifica tramite {@link GestoreBiglietti#modificaPrenotazione}.
+     */
     private void modificaPrenotazione() {
         System.out.print("Codice prenotazione: ");
         String codice = tastiera.nextLine().trim();
@@ -130,6 +169,10 @@ public class SchermataSpettatore {
         }
     }
 
+    /**
+     * Chiede il codice di una prenotazione esistente e la elimina tramite
+     * {@link GestoreBiglietti#eliminaPrenotazione(String)}.
+     */
     private void eliminaPrenotazione() {
         System.out.print("Codice prenotazione: ");
         String codice = tastiera.nextLine().trim();
@@ -141,9 +184,10 @@ public class SchermataSpettatore {
 
     /**
      * Chiede un titolo (anche parziale), cerca le proiezioni corrispondenti,
-     * le mostra in un elenco numerato e chiede di sceglierne una. Restituisce
-     * lo Spettacolo scelto, oppure null se l'utente annulla o non ci sono
-     * risultati.
+     * le mostra in un elenco numerato (con i posti liberi) e chiede di
+     * sceglierne una.
+     *
+     * @return lo Spettacolo scelto, oppure null se l'utente annulla o non ci sono risultati
      */
     private Spettacolo cercaESeleziona() {
         System.out.print("Titolo (anche parziale, invio per vedere tutte le proiezioni): ");
@@ -162,6 +206,12 @@ public class SchermataSpettatore {
         return risultati[scelta - 1];
     }
 
+    /**
+     * Stampa un elenco numerato di proiezioni, indicando per ciascuna anche
+     * i posti liberi calcolati tramite {@link GestoreSpettacoli#postiLiberi}.
+     *
+     * @param risultati le proiezioni da stampare, nell'ordine desiderato
+     */
     private void stampaRisultatiNumerati(Spettacolo[] risultati) {
         if (risultati.length == 0) {
             System.out.println("Nessuna proiezione trovata.");
@@ -174,6 +224,11 @@ public class SchermataSpettatore {
         }
     }
 
+    /**
+     * Legge una riga di input, restituendo null se e' vuota.
+     *
+     * @return il testo inserito (senza spazi iniziali/finali), oppure null se vuoto
+     */
     private String leggiOpzionale() {
         String testo = tastiera.nextLine().trim();
         if (testo.isEmpty()) {
@@ -182,6 +237,12 @@ public class SchermataSpettatore {
         return testo;
     }
 
+    /**
+     * Legge un numero intero dall'input, restituendo 0 se il testo inserito
+     * non e' un numero valido.
+     *
+     * @return il numero intero inserito, oppure 0 se il formato non e' valido
+     */
     private int leggiIntero() {
         try {
             return Integer.parseInt(tastiera.nextLine().trim());

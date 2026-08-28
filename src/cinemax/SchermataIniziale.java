@@ -8,19 +8,34 @@ import java.util.Scanner;
  * Menu iniziale mostrato all'avvio dell'applicazione: login, registrazione
  * o accesso come ospite.
  *
- * @author Davide De Agostini 766294 (CO)
- * @author Luigi d'Elia 765969 (CO)
- * @author Ahsan Saeed 767241 (CO)
- * @author Martina Zecchini 765842 (CO)
+ * @author Davide De Agostini - Matricola 766294 - CO
+ * @author Luigi d'Elia - Matricola 765969 - CO
+ * @author Ahsan Saeed - Matricola 767241 - CO
+ * @author Martina Zecchini - Matricola 765842 - CO
  */
 public class SchermataIniziale {
 
+    /** Il lettore da cui acquisire l'input dell'utente. */
     private Scanner tastiera;
+    /** Il gestore degli accessi, usato per login e registrazione. */
     private GestoreAccessi gestoreAccessi;
+    /** Il gestore delle proiezioni, passato alle schermate successive. */
     private GestoreSpettacoli gestoreSpettacoli;
+    /** Il gestore delle prenotazioni, passato alle schermate successive. */
     private GestoreBiglietti gestoreBiglietti;
+    /** Il motore di ricerca, passato alle schermate successive. */
     private MotoreRicerca motoreRicerca;
 
+    /**
+     * Costruttore che collega la schermata al lettore di input e a tutti i
+     * gestori necessari per instradare l'utente verso la schermata corretta.
+     *
+     * @param tastiera          il lettore da cui acquisire l'input
+     * @param gestoreAccessi    il gestore degli accessi
+     * @param gestoreSpettacoli il gestore delle proiezioni
+     * @param gestoreBiglietti  il gestore delle prenotazioni
+     * @param motoreRicerca     il motore di ricerca
+     */
     public SchermataIniziale(Scanner tastiera, GestoreAccessi gestoreAccessi, GestoreSpettacoli gestoreSpettacoli,
             GestoreBiglietti gestoreBiglietti, MotoreRicerca motoreRicerca) {
         this.tastiera = tastiera;
@@ -30,6 +45,10 @@ public class SchermataIniziale {
         this.motoreRicerca = motoreRicerca;
     }
 
+    /**
+     * Avvia il ciclo del menu iniziale, mostrando le opzioni disponibili
+     * finche' l'utente non sceglie di uscire dall'applicazione.
+     */
     public void avvia() {
         boolean continuare = true;
         while (continuare) {
@@ -61,6 +80,11 @@ public class SchermataIniziale {
         }
     }
 
+    /**
+     * Chiede username e password, effettua il login tramite
+     * {@link GestoreAccessi#login(String, String)} e, se riuscito, instrada
+     * l'utente verso la schermata dedicata al proprio ruolo.
+     */
     private void effettuaLogin() {
         System.out.print("Username: ");
         String username = tastiera.nextLine().trim();
@@ -86,6 +110,11 @@ public class SchermataIniziale {
         }
     }
 
+    /**
+     * Chiede tutti i dati anagrafici di un nuovo cliente e ne effettua la
+     * registrazione tramite
+     * {@link GestoreAccessi#registraCliente(String, String, String, String, LocalDate, String)}.
+     */
     private void effettuaRegistrazione() {
         System.out.print("Nome: ");
         String nome = tastiera.nextLine().trim();
@@ -106,6 +135,12 @@ public class SchermataIniziale {
         }
     }
 
+    /**
+     * Legge una data di nascita facoltativa, restituendo null se il campo
+     * viene lasciato vuoto o se il formato inserito non e' valido.
+     *
+     * @return la data di nascita inserita, oppure null se assente o non valida
+     */
     private LocalDate leggiDataNascitaOpzionale() {
         String testo = tastiera.nextLine().trim();
         if (testo.isEmpty()) {

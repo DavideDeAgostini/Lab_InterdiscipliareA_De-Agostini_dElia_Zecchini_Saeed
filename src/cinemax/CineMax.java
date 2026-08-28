@@ -1,3 +1,12 @@
+/**
+ * CineMax - Laboratorio Interdisciplinare A - a.a. 2025/2026
+ * Universita' degli Studi dell'Insubria
+ *
+ * @author Davide De Agostini - Matricola 766294 - CO
+ * @author Luigi d'Elia - Matricola 765969 - CO
+ * @author Ahsan Saeed - Matricola 767241 - CO
+ * @author Martina Zecchini - Matricola 765842 - CO
+ */
 package cinemax;
 
 import java.util.Scanner;
@@ -6,12 +15,31 @@ import java.util.Scanner;
  * Punto di ingresso dell'applicazione CineMax: inizializza gli archivi,
  * i gestori e avvia il menu iniziale.
  *
- * @author Davide De Agostini 766294 (CO)
- * @author Luigi d'Elia 765969 (CO)
- * @author Ahsan Saeed 767241 (CO)
- * @author Martina Zecchini 765842 (CO)
+ * @author Davide De Agostini - Matricola 766294 - CO
+ * @author Luigi d'Elia - Matricola 765969 - CO
+ * @author Ahsan Saeed - Matricola 767241 - CO
+ * @author Martina Zecchini - Matricola 765842 - CO
  */
 public class CineMax {
+        /**
+         * Costruttore privato: la classe espone solo il metodo {@link #main}
+         * e non deve essere istanziata.
+         */
+        private CineMax() {
+        }
+
+        /**
+         * Punto di ingresso dell'applicazione.
+         * <p>
+         * Inizializza gli archivi ({@link ArchivioSpettacoli},
+         * {@link ArchivioBiglietti}, {@link ArchivioAccount}), i gestori
+         * ({@link GestoreSpettacoli}, {@link GestoreBiglietti},
+         * {@link GestoreAccessi}, {@link MotoreRicerca}) e avvia
+         * {@link SchermataIniziale#avvia()}, che gestisce l'intero ciclo di
+         * interazione a terminale.
+         *
+         * @param args argomenti da linea di comando (non utilizzati)
+         */
         public static void main(String[] args) {
                 String cartellaDati = "data";
                 ArchivioSpettacoli archivioSpettacoli = new ArchivioSpettacoli(cartellaDati + "/proiezioni.csv");

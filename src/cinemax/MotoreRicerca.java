@@ -4,19 +4,30 @@ import java.time.LocalDateTime;
 
 /**
  * Contiene la logica di ricerca sulle proiezioni e sulle prenotazioni.
- * Tenuta separata dai Gestori perche' i criteri (parziali, intervalli,
+ * <p>
+ * Tenuta separata dai Gestore* perche' i criteri (parziali, intervalli,
  * combinazioni) sono complessi e riusati in piu' punti dell'applicazione.
  *
- * @author Davide De Agostini 766294 (CO)
- * @author Luigi d'Elia 765969 (CO)
- * @author Ahsan Saeed 767241 (CO)
- * @author Martina Zecchini 765842 (CO)
+ * @author Davide De Agostini - Matricola 766294 - CO
+ * @author Luigi d'Elia - Matricola 765969 - CO
+ * @author Ahsan Saeed - Matricola 767241 - CO
+ * @author Martina Zecchini - Matricola 765842 - CO
  */
 public class MotoreRicerca {
+    /** L'archivio delle proiezioni su cui operano le ricerche di {@link #cercaProiezione}. */
     private ArchivioSpettacoli archivioSpettacoli;
+    /** L'archivio delle prenotazioni su cui operano le ricerche di {@link #cercaPrenotazione}. */
     private ArchivioBiglietti archivioBiglietti;
+    /** L'archivio degli account, usato per risolvere nome e cognome del cliente nella ricerca prenotazioni. */
     private ArchivioAccount archivioAccount;
 
+    /**
+     * Costruttore che collega il motore di ricerca agli archivi necessari.
+     *
+     * @param archivioSpettacoli l'archivio delle proiezioni
+     * @param archivioBiglietti  l'archivio delle prenotazioni
+     * @param archivioAccount    l'archivio degli account
+     */
     public MotoreRicerca(ArchivioSpettacoli archivioSpettacoli, ArchivioBiglietti archivioBiglietti,
             ArchivioAccount archivioAccount) {
         this.archivioSpettacoli = archivioSpettacoli;
@@ -26,7 +37,17 @@ public class MotoreRicerca {
 
     /**
      * Cerca le proiezioni che soddisfano i criteri forniti, combinati in AND.
-     * Ogni parametro puo' essere null (o stringa vuota) per non essere applicato.
+     * <p>
+     * Ogni parametro puo' essere null (o stringa vuota per il titolo) per non
+     * essere applicato.
+     *
+     * @param titoloParziale titolo (anche parziale) da cercare, o null per non filtrare
+     * @param genere         genere esatto da cercare, o null per non filtrare
+     * @param dataInizio     inizio dell'intervallo di data/ora, o null per non filtrare
+     * @param dataFine       fine dell'intervallo di data/ora, o null per non filtrare
+     * @param prezzoMinimo   prezzo minimo del biglietto, o null per non filtrare
+     * @param prezzoMassimo  prezzo massimo del biglietto, o null per non filtrare
+     * @return un array con le proiezioni che soddisfano tutti i criteri specificati
      */
     public Spettacolo[] cercaProiezione(String titoloParziale, String genere, LocalDateTime dataInizio,
             LocalDateTime dataFine, Double prezzoMinimo, Double prezzoMassimo) {
@@ -81,7 +102,17 @@ public class MotoreRicerca {
 
     /**
      * Cerca le prenotazioni che soddisfano i criteri forniti, combinati in AND.
-     * Ogni parametro puo' essere null (o stringa vuota) per non essere applicato.
+     * <p>
+     * Ogni parametro puo' essere null (o stringa vuota per i campi testuali)
+     * per non essere applicato. Il nome/cognome del cliente viene risolto
+     * tramite {@link ArchivioAccount#trovaPerUsername(String)}.
+     *
+     * @param codice                codice esatto della prenotazione, o null per non filtrare
+     * @param nomeCognomeParziale   nome e/o cognome (anche parziale) del cliente, o null per non filtrare
+     * @param titoloParziale        titolo (anche parziale) del film, o null per non filtrare
+     * @param dataInizio            inizio dell'intervallo di data/ora, o null per non filtrare
+     * @param dataFine              fine dell'intervallo di data/ora, o null per non filtrare
+     * @return un array con le prenotazioni che soddisfano tutti i criteri specificati
      */
     public Biglietto[] cercaPrenotazione(String codice, String nomeCognomeParziale, String titoloParziale,
             LocalDateTime dataInizio, LocalDateTime dataFine) {

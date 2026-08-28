@@ -13,23 +13,34 @@ import java.time.LocalDateTime;
 
 /**
  * Gestisce la lettura, la scrittura e l'accesso in memoria alle prenotazioni.
- * Il file data/prenotazioni.csv parte con la sola riga di intestazione
- * (nessuna prenotazione ancora effettuata): viene popolato dall'applicazione
- * durante l'uso. Formato di ogni riga (dopo l'intestazione): codice,
- * username_cliente,titolo_film,data_ora_spettacolo,numero_posti,
- * costo_unitario. La proiezione e' referenziata con titolo+data/ora (chiave
- * composta) invece che con un id numerico.
+ * <p>
+ * Il file <code>data/prenotazioni.csv</code> parte con la sola riga di
+ * intestazione (nessuna prenotazione ancora effettuata): viene popolato
+ * dall'applicazione durante l'uso. Formato di ogni riga (dopo l'intestazione):
+ * <code>codice,username_cliente,titolo_film,data_ora_spettacolo,numero_posti,costo_unitario</code>.
+ * La proiezione e' referenziata con titolo+data/ora (chiave composta, vedi
+ * {@link Spettacolo#corrispondeA(String, LocalDateTime)}) invece che con un
+ * id numerico.
  *
- * @author Davide De Agostini 766294 (CO)
- * @author Luigi d'Elia 765969 (CO)
- * @author Ahsan Saeed 767241 (CO)
- * @author Martina Zecchini 765842 (CO)
+ * @author Davide De Agostini - Matricola 766294 - CO
+ * @author Luigi d'Elia - Matricola 765969 - CO
+ * @author Ahsan Saeed - Matricola 767241 - CO
+ * @author Martina Zecchini - Matricola 765842 - CO
  */
 public class ArchivioBiglietti {
+    /** Percorso del file CSV su cui l'archivio legge e scrive. */
     private String percorsoFile;
+    /** Array in memoria dei biglietti caricati, ridimensionato dinamicamente. */
     private Biglietto[] elenco;
+    /** Numero di biglietti effettivamente occupati nell'array {@link #elenco}. */
     private int quantita;
 
+    /**
+     * Costruttore che imposta il percorso del file e carica subito le
+     * prenotazioni esistenti tramite {@link #caricaDaFile()}.
+     *
+     * @param percorsoFile il percorso del file CSV da usare per la persistenza
+     */
     public ArchivioBiglietti(String percorsoFile) {
         this.percorsoFile = percorsoFile;
         this.elenco = new Biglietto[10];
@@ -37,6 +48,13 @@ public class ArchivioBiglietti {
         caricaDaFile();
     }
 
+    /**
+     * Legge il file CSV e ricostruisce l'elenco delle prenotazioni in memoria.
+     * <p>
+     * La riga di intestazione viene riconosciuta tentando di interpretarla
+     * come dato: se il parsing fallisce viene scartata senza avviso; le righe
+     * successive malformate vengono invece segnalate a schermo e ignorate.
+     */
     public void caricaDaFile() {
         elenco = new Biglietto[10];
         quantita = 0;
@@ -78,8 +96,8 @@ public class ArchivioBiglietti {
     }
 
     /**
-     * Riscrive interamente il file a partire dall'elenco in memoria, con la riga di
-     * intestazione in testa.
+     * Riscrive interamente il file a partire dall'elenco in memoria, con la
+     * riga di intestazione in testa.
      */
     public void salvaSuFile() {
         try (BufferedWriter scrittore = new BufferedWriter(
@@ -103,6 +121,15 @@ public class ArchivioBiglietti {
         }
     }
 
+    /**
+     * Aggiunge un biglietto all'array {@link #elenco} in memoria, raddoppiando
+     * la capacita' dell'array se necessario.
+     * <p>
+     * Non salva su file: e' un'operazione di solo supporto usata da
+     * {@link #caricaDaFile()} e da {@link #aggiungi(Biglietto)}.
+     *
+     * @param biglietto il biglietto da aggiungere in memoria
+     */
     private void aggiungiInMemoria(Biglietto biglietto) {
         if (quantita == elenco.length) {
             Biglietto[] nuovoArray = new Biglietto[elenco.length * 2];
@@ -115,6 +142,14 @@ public class ArchivioBiglietti {
         quantita++;
     }
 
+    /**
+     * Restituisce una copia di tutte le prenotazioni in memoria.
+     * <p>
+     * Viene restituita una copia per evitare che codice esterno modifichi
+     * l'array interno dell'archivio.
+     *
+     * @return un array con tutte le prenotazioni caricate
+     */
     public Biglietto[] elencoTutti() {
         Biglietto[] copia = new Biglietto[quantita];
         for (int i = 0; i < quantita; i++) {
@@ -123,6 +158,13 @@ public class ArchivioBiglietti {
         return copia;
     }
 
+    /**
+     * Cerca una prenotazione per codice, senza distinzione tra maiuscole e
+     * minuscole.
+     *
+     * @param codice il codice della prenotazione da cercare
+     * @return la prenotazione trovata, oppure null se nessuna corrisponde
+     */
     public Biglietto trovaPerCodice(String codice) {
         for (int i = 0; i < quantita; i++) {
             if (elenco[i].getCodice().equalsIgnoreCase(codice)) {
@@ -132,11 +174,29 @@ public class ArchivioBiglietti {
         return null;
     }
 
+    /**
+     * Aggiunge una nuova prenotazione sia in memoria sia su file.
+     * <p>
+     * Equivale a chiamare {@link #aggiungiInMemoria(Biglietto)} seguito da
+     * {@link #salvaSuFile()}.
+     *
+     * @param biglietto la prenotazione da aggiungere
+     */
     public void aggiungi(Biglietto biglietto) {
         aggiungiInMemoria(biglietto);
         salvaSuFile();
     }
 
+    /**
+     * Rimuove una prenotazione dall'elenco in memoria e salva su file.
+     * <p>
+     * Trasla di una posizione tutti gli elementi successivi a quello
+     * rimosso, in modo che l'invariante "gli elementi occupati sono le prime
+     * {@link #quantita} posizioni" resti sempre valida.
+     *
+     * @param codice il codice della prenotazione da rimuovere
+     * @return true se la prenotazione e' stata trovata e rimossa, false altrimenti
+     */
     public boolean rimuovi(String codice) {
         for (int i = 0; i < quantita; i++) {
             if (elenco[i].getCodice().equalsIgnoreCase(codice)) {

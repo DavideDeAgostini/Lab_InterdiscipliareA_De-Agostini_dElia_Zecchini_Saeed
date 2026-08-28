@@ -9,18 +9,31 @@ import java.util.Scanner;
  * il lavoro quotidiano in cassa, senza dover impostare tutti i criteri di
  * ricerca insieme).
  *
- * @author Davide De Agostini 766294 (CO)
- * @author Luigi d'Elia 765969 (CO)
- * @author Ahsan Saeed 767241 (CO)
- * @author Martina Zecchini 765842 (CO)
+ * @author Davide De Agostini - Matricola 766294 - CO
+ * @author Luigi d'Elia - Matricola 765969 - CO
+ * @author Ahsan Saeed - Matricola 767241 - CO
+ * @author Martina Zecchini - Matricola 765842 - CO
  */
 public class SchermataCassiere {
 
+    /** Il lettore da cui acquisire l'input dell'utente. */
     private Scanner tastiera;
+    /** Il motore di ricerca usato per le ricerche di prenotazioni. */
     private MotoreRicerca motoreRicerca;
+    /** Il gestore delle prenotazioni, usato per la vista della giornata corrente. */
     private GestoreBiglietti gestoreBiglietti;
+    /** Il gestore degli accessi, usato per il logout. */
     private GestoreAccessi gestoreAccessi;
 
+    /**
+     * Costruttore che collega la schermata al lettore di input e ai gestori
+     * necessari.
+     *
+     * @param tastiera         il lettore da cui acquisire l'input
+     * @param motoreRicerca    il motore di ricerca per le prenotazioni
+     * @param gestoreBiglietti il gestore delle prenotazioni
+     * @param gestoreAccessi   il gestore degli accessi, per il logout
+     */
     public SchermataCassiere(Scanner tastiera, MotoreRicerca motoreRicerca,
             GestoreBiglietti gestoreBiglietti, GestoreAccessi gestoreAccessi) {
         this.tastiera = tastiera;
@@ -29,6 +42,10 @@ public class SchermataCassiere {
         this.gestoreAccessi = gestoreAccessi;
     }
 
+    /**
+     * Avvia il ciclo del menu bigliettaio, mostrando le opzioni disponibili
+     * finche' l'utente non sceglie il logout.
+     */
     public void avvia() {
         boolean continuare = true;
         while (continuare) {
@@ -61,6 +78,11 @@ public class SchermataCassiere {
         }
     }
 
+    /**
+     * Chiede codice, nome/cognome cliente e titolo film (tutti facoltativi)
+     * e stampa le prenotazioni trovate tramite
+     * {@link MotoreRicerca#cercaPrenotazione}.
+     */
     private void cercaPrenotazioni() {
         System.out.print("Codice (invio per saltare): ");
         String codice = leggiOpzionale();
@@ -80,8 +102,9 @@ public class SchermataCassiere {
     }
 
     /**
-     * Mostra tutte le prenotazioni relative a proiezioni della giornata odierna, in
-     * ordine di orario.
+     * Mostra tutte le prenotazioni relative a proiezioni della giornata
+     * odierna, in ordine di orario, tramite
+     * {@link GestoreBiglietti#prenotazioniDiOggi()}.
      */
     private void stampaPrenotazioniDiOggi() {
         Biglietto[] prenotazioniOggi = gestoreBiglietti.prenotazioniDiOggi();
@@ -95,8 +118,8 @@ public class SchermataCassiere {
     }
 
     /**
-     * Ricerca dedicata per nome/cognome del cliente (anche parziale), senza dover
-     * impostare altri criteri.
+     * Ricerca dedicata per nome/cognome del cliente (anche parziale), senza
+     * dover impostare altri criteri.
      */
     private void cercaPerNomeCliente() {
         System.out.print("Nome e/o cognome cliente (anche parziale): ");
@@ -115,6 +138,14 @@ public class SchermataCassiere {
         }
     }
 
+    /**
+     * Legge una riga di input, restituendo null se e' vuota.
+     * <p>
+     * Usato per i criteri di ricerca facoltativi: premere Invio equivale a
+     * non applicare quel criterio.
+     *
+     * @return il testo inserito (senza spazi iniziali/finali), oppure null se vuoto
+     */
     private String leggiOpzionale() {
         String testo = tastiera.nextLine().trim();
         if (testo.isEmpty()) {

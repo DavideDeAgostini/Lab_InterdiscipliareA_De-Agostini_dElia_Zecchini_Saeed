@@ -5,22 +5,33 @@ import java.time.LocalDateTime;
 /**
  * Contiene le regole applicative relative alle proiezioni: creazione senza
  * sovrapposizioni, modifica/eliminazione solo in assenza di prenotazioni,
- * calcolo dei posti liberi. Le proiezioni sono identificate dalla loro
- * chiave composta (titolo del film + data/ora), non da un id numerico.
+ * calcolo dei posti liberi.
+ * <p>
+ * Le proiezioni sono identificate dalla loro chiave composta (titolo del
+ * film + data/ora), non da un id numerico, vedi
+ * {@link Spettacolo#corrispondeA(String, LocalDateTime)}.
  *
- * @author Davide De Agostini 766294 (CO)
- * @author Luigi d'Elia 765969 (CO)
- * @author Ahsan Saeed 767241 (CO)
- * @author Martina Zecchini 765842 (CO)
+ * @author Davide De Agostini - Matricola 766294 - CO
+ * @author Luigi d'Elia - Matricola 765969 - CO
+ * @author Ahsan Saeed - Matricola 767241 - CO
+ * @author Martina Zecchini - Matricola 765842 - CO
  */
 public class GestoreSpettacoli {
 
     /** Capienza fissa della sala, come da specifiche di progetto. */
     public static final int CAPIENZA_SALA = 200;
 
+    /** L'archivio delle proiezioni su cui il gestore opera. */
     private ArchivioSpettacoli archivioSpettacoli;
+    /** L'archivio delle prenotazioni, usato per i controlli di occupazione e vincolo. */
     private ArchivioBiglietti archivioBiglietti;
 
+    /**
+     * Costruttore che collega il gestore agli archivi necessari.
+     *
+     * @param archivioSpettacoli l'archivio delle proiezioni
+     * @param archivioBiglietti  l'archivio delle prenotazioni
+     */
     public GestoreSpettacoli(ArchivioSpettacoli archivioSpettacoli, ArchivioBiglietti archivioBiglietti) {
         this.archivioSpettacoli = archivioSpettacoli;
         this.archivioBiglietti = archivioBiglietti;
@@ -31,6 +42,9 @@ public class GestoreSpettacoli {
      * proiezione esistente (stesso intervallo di tempo, calcolato con la
      * durata del film).
      *
+     * @param film           il film da proiettare
+     * @param dataOra        la data e l'ora di inizio della proiezione
+     * @param prezzoBiglietto il prezzo del biglietto per questa proiezione
      * @return true se la proiezione e' stata aggiunta
      */
     public boolean aggiungiProiezione(Pellicola film, LocalDateTime dataOra, double prezzoBiglietto) {
@@ -47,6 +61,17 @@ public class GestoreSpettacoli {
         return true;
     }
 
+    /**
+     * Verifica se una proiezione candidata si sovrappone temporalmente a una
+     * proiezione gia' esistente in archivio.
+     * <p>
+     * Due intervalli [inizio, fine) si sovrappongono se e solo se l'inizio
+     * del primo precede la fine del secondo e l'inizio del secondo precede
+     * la fine del primo.
+     *
+     * @param candidata la proiezione candidata da verificare
+     * @return true se la proiezione candidata si sovrappone ad almeno una proiezione esistente
+     */
     private boolean siSovrappone(Spettacolo candidata) {
         LocalDateTime inizioCandidata = candidata.getDataOra();
         LocalDateTime fineCandidata = candidata.getDataOraFine();
@@ -66,9 +91,17 @@ public class GestoreSpettacoli {
     /**
      * Modifica data/ora e prezzo di una proiezione esistente (identificata
      * da titolo e data/ora attuali), a patto che non esistano prenotazioni
-     * collegate. Poiche' la modifica e' bloccata in presenza di
-     * prenotazioni, cambiare la data/ora (parte della chiave composta) qui
-     * non puo' mai invalidare un riferimento gia' salvato altrove.
+     * collegate.
+     * <p>
+     * Poiche' la modifica e' bloccata in presenza di prenotazioni, cambiare
+     * la data/ora (parte della chiave composta) qui non puo' mai invalidare
+     * un riferimento gia' salvato altrove.
+     *
+     * @param titolo        il titolo della proiezione da modificare
+     * @param dataOraAttuale la data/ora attuale della proiezione da modificare
+     * @param nuovaDataOra  la nuova data/ora da assegnare
+     * @param nuovoPrezzo   il nuovo prezzo del biglietto
+     * @return true se la modifica e' andata a buon fine, false altrimenti
      */
     public boolean modificaProiezione(String titolo, LocalDateTime dataOraAttuale, LocalDateTime nuovaDataOra,
             double nuovoPrezzo) {
@@ -91,7 +124,13 @@ public class GestoreSpettacoli {
         return true;
     }
 
-    /** Elimina una proiezione, a patto che non esistano prenotazioni collegate. */
+    /**
+     * Elimina una proiezione, a patto che non esistano prenotazioni collegate.
+     *
+     * @param titolo  il titolo della proiezione da eliminare
+     * @param dataOra la data/ora della proiezione da eliminare
+     * @return true se la proiezione e' stata trovata ed eliminata, false altrimenti
+     */
     public boolean eliminaProiezione(String titolo, LocalDateTime dataOra) {
         if (esistonoPrenotazioniPer(titolo, dataOra)) {
             System.out.println("Impossibile eliminare: esistono prenotazioni per questa proiezione.");
@@ -100,6 +139,18 @@ public class GestoreSpettacoli {
         return archivioSpettacoli.rimuovi(titolo, dataOra);
     }
 
+    /**
+     * Verifica se esiste almeno una prenotazione collegata a una determinata
+     * proiezione.
+     * <p>
+     * Metodo di supporto usato da {@link #modificaProiezione} e
+     * {@link #eliminaProiezione} per far rispettare il vincolo che vieta
+     * di alterare proiezioni gia' prenotate.
+     *
+     * @param titolo  il titolo della proiezione da verificare
+     * @param dataOra la data/ora della proiezione da verificare
+     * @return true se esiste almeno una prenotazione collegata alla proiezione
+     */
     private boolean esistonoPrenotazioniPer(String titolo, LocalDateTime dataOra) {
         Biglietto[] tutti = archivioBiglietti.elencoTutti();
         for (int i = 0; i < tutti.length; i++) {
@@ -110,13 +161,24 @@ public class GestoreSpettacoli {
         return false;
     }
 
+    /**
+     * Cerca una singola proiezione tramite titolo e data/ora.
+     *
+     * @param titolo  il titolo della proiezione da visualizzare
+     * @param dataOra la data/ora della proiezione da visualizzare
+     * @return la proiezione trovata, oppure null se non esiste
+     */
     public Spettacolo visualizzaProiezione(String titolo, LocalDateTime dataOra) {
         return archivioSpettacoli.trovaPerChiave(titolo, dataOra);
     }
 
     /**
-     * Restituisce il numero di posti liberi per una proiezione (capienza meno posti
-     * gia' prenotati).
+     * Restituisce il numero di posti liberi per una proiezione (capienza
+     * meno posti gia' prenotati).
+     *
+     * @param titolo  il titolo della proiezione di cui calcolare i posti liberi
+     * @param dataOra la data/ora della proiezione di cui calcolare i posti liberi
+     * @return il numero di posti ancora disponibili, calcolato come {@link #CAPIENZA_SALA} meno i posti occupati
      */
     public int postiLiberi(String titolo, LocalDateTime dataOra) {
         int postiOccupati = 0;
@@ -132,11 +194,14 @@ public class GestoreSpettacoli {
     /**
      * Restituisce l'intero palinsesto (tutte le proiezioni presenti in
      * archivio), ordinato cronologicamente dalla data/ora piu' vicina nel
-     * passato/futuro fino alla piu' lontana. L'ordinamento e' fatto con una
-     * selection sort su un array copia (nessuna modifica all'archivio):
-     * semplice da spiegare e, per le dimensioni tipiche di un palinsesto
-     * (anche alcune migliaia di proiezioni), abbastanza veloce da non essere
-     * un problema.
+     * passato/futuro fino alla piu' lontana.
+     * <p>
+     * L'ordinamento e' fatto con una selection sort su un array copia
+     * (nessuna modifica all'archivio): semplice da spiegare e, per le
+     * dimensioni tipiche di un palinsesto (anche alcune migliaia di
+     * proiezioni), abbastanza veloce da non essere un problema.
+     *
+     * @return un array con tutte le proiezioni, ordinate cronologicamente
      */
     public Spettacolo[] elencoPalinsesto() {
         Spettacolo[] elenco = archivioSpettacoli.elencoTutti();
@@ -159,8 +224,13 @@ public class GestoreSpettacoli {
     /**
      * Restituisce solo le proiezioni future (data/ora successiva all'istante
      * corrente), ordinate cronologicamente dalla piu' vicina alla piu'
-     * lontana. Pensata per l'ospite: una lista pronta da consultare senza
-     * dover impostare criteri di ricerca.
+     * lontana.
+     * <p>
+     * Pensata per l'ospite: una lista pronta da consultare senza dover
+     * impostare criteri di ricerca. Si appoggia a {@link #elencoPalinsesto()}
+     * per l'ordinamento cronologico.
+     *
+     * @return un array con le sole proiezioni future, ordinate cronologicamente
      */
     public Spettacolo[] elencoProiezioniFuture() {
         Spettacolo[] tutte = elencoPalinsesto();

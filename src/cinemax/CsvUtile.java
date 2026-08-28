@@ -5,16 +5,28 @@ package cinemax;
  * correttamente i campi racchiusi tra virgolette (che possono contenere
  * virgole al loro interno, come nei titoli dei film).
  *
- * @author Davide De Agostini 766294 (CO)
- * @author Luigi d'Elia 765969 (CO)
- * @author Ahsan Saeed 767241 (CO)
- * @author Martina Zecchini 765842 (CO)
+ * @author Davide De Agostini - Matricola 766294 - CO
+ * @author Luigi d'Elia - Matricola 765969 - CO
+ * @author Ahsan Saeed - Matricola 767241 - CO
+ * @author Martina Zecchini - Matricola 765842 - CO
  */
 public class CsvUtile {
+    /**
+     * Costruttore privato: la classe espone solo metodi statici e non deve
+     * essere istanziata.
+     */
     private CsvUtile() {
     }
 
-    /** Divide una riga CSV in campi, rispettando le virgolette. */
+    /**
+     * Divide una riga CSV in campi, rispettando le virgolette.
+     * <p>
+     * Un campo racchiuso tra virgolette puo' contenere virgole al proprio
+     * interno senza che vengano interpretate come separatori.
+     *
+     * @param riga la riga CSV da dividere
+     * @return un array con i campi estratti dalla riga, nell'ordine in cui compaiono
+     */
     public static String[] dividiRiga(String riga) {
         String[] campi = new String[10];
         int numeroCampi = 0;
@@ -41,6 +53,17 @@ public class CsvUtile {
         return risultato;
     }
 
+    /**
+     * Inserisce un valore nell'array dei campi in costruzione, raddoppiando
+     * l'array se l'indice richiesto supera la capacita' attuale.
+     * <p>
+     * Metodo di supporto usato esclusivamente da {@link #dividiRiga(String)}.
+     *
+     * @param campi  l'array dei campi in costruzione
+     * @param indice l'indice in cui inserire il valore
+     * @param valore il valore del campo da inserire
+     * @return l'array dei campi, eventualmente ridimensionato
+     */
     private static String[] aggiungiCampo(String[] campi, int indice, String valore) {
         if (indice == campi.length) {
             String[] nuovoArray = new String[campi.length * 2];
@@ -54,8 +77,14 @@ public class CsvUtile {
     }
 
     /**
-     * Compone una riga CSV, racchiudendo tra virgolette i campi che contengono
-     * virgole o virgolette.
+     * Compone una riga CSV, racchiudendo tra virgolette i campi che
+     * contengono virgole o virgolette.
+     * <p>
+     * Le virgolette eventualmente presenti in un campo vengono raddoppiate,
+     * secondo la convenzione CSV standard.
+     *
+     * @param campi i valori dei campi da comporre in un'unica riga, nell'ordine desiderato
+     * @return la riga CSV composta
      */
     public static String componiRiga(String... campi) {
         StringBuilder riga = new StringBuilder();

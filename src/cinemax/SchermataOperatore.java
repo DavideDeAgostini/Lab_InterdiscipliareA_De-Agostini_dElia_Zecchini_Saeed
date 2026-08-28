@@ -6,23 +6,37 @@ import java.util.Scanner;
 
 /**
  * Menu per il proiezionista autenticato: gestione del palinsesto
- * (aggiunta, modifica, cancellazione delle proiezioni). Per modificare o
- * eliminare, prima si cerca (per titolo, anche parziale) e poi si sceglie
- * dall'elenco numerato mostrato a schermo, invece di dover ridigitare
- * titolo e data/ora esatti a memoria.
+ * (aggiunta, modifica, cancellazione delle proiezioni).
+ * <p>
+ * Per modificare o eliminare, prima si cerca (per titolo, anche parziale) e
+ * poi si sceglie dall'elenco numerato mostrato a schermo, invece di dover
+ * ridigitare titolo e data/ora esatti a memoria.
  *
- * @author Davide De Agostini 766294 (CO)
- * @author Luigi d'Elia 765969 (CO)
- * @author Ahsan Saeed 767241 (CO)
- * @author Martina Zecchini 765842 (CO)
+ * @author Davide De Agostini - Matricola 766294 - CO
+ * @author Luigi d'Elia - Matricola 765969 - CO
+ * @author Ahsan Saeed - Matricola 767241 - CO
+ * @author Martina Zecchini - Matricola 765842 - CO
  */
 public class SchermataOperatore {
 
+    /** Il lettore da cui acquisire l'input dell'utente. */
     private Scanner tastiera;
+    /** Il motore di ricerca usato per trovare le proiezioni da modificare/eliminare. */
     private MotoreRicerca motoreRicerca;
+    /** Il gestore delle proiezioni, su cui vengono eseguite le operazioni del menu. */
     private GestoreSpettacoli gestoreSpettacoli;
+    /** Il gestore degli accessi, usato per il logout. */
     private GestoreAccessi gestoreAccessi;
 
+    /**
+     * Costruttore che collega la schermata al lettore di input e ai gestori
+     * necessari.
+     *
+     * @param tastiera          il lettore da cui acquisire l'input
+     * @param motoreRicerca     il motore di ricerca per le proiezioni
+     * @param gestoreSpettacoli il gestore delle proiezioni
+     * @param gestoreAccessi    il gestore degli accessi, per il logout
+     */
     public SchermataOperatore(Scanner tastiera, MotoreRicerca motoreRicerca,
             GestoreSpettacoli gestoreSpettacoli, GestoreAccessi gestoreAccessi) {
         this.tastiera = tastiera;
@@ -31,6 +45,10 @@ public class SchermataOperatore {
         this.gestoreAccessi = gestoreAccessi;
     }
 
+    /**
+     * Avvia il ciclo del menu proiezionista, mostrando le opzioni disponibili
+     * finche' l'utente non sceglie il logout.
+     */
     public void avvia() {
         boolean continuare = true;
         while (continuare) {
@@ -67,6 +85,11 @@ public class SchermataOperatore {
         }
     }
 
+    /**
+     * Chiede tutti i dati di un nuovo film e della sua proiezione, e la
+     * aggiunge tramite
+     * {@link GestoreSpettacoli#aggiungiProiezione(Pellicola, LocalDateTime, double)}.
+     */
     private void aggiungiProiezione() {
         System.out.print("Titolo film: ");
         String titolo = tastiera.nextLine().trim();
@@ -96,6 +119,12 @@ public class SchermataOperatore {
         }
     }
 
+    /**
+     * Cerca e seleziona una proiezione tramite {@link #cercaESeleziona()},
+     * poi ne chiede la nuova data/ora e il nuovo prezzo e applica la
+     * modifica tramite
+     * {@link GestoreSpettacoli#modificaProiezione(String, LocalDateTime, LocalDateTime, double)}.
+     */
     private void modificaProiezione() {
         System.out.println("Cerca la proiezione da modificare:");
         Spettacolo scelta = cercaESeleziona();
@@ -118,6 +147,11 @@ public class SchermataOperatore {
         }
     }
 
+    /**
+     * Cerca e seleziona una proiezione tramite {@link #cercaESeleziona()} e
+     * la elimina tramite
+     * {@link GestoreSpettacoli#eliminaProiezione(String, LocalDateTime)}.
+     */
     private void eliminaProiezione() {
         System.out.println("Cerca la proiezione da eliminare:");
         Spettacolo scelta = cercaESeleziona();
@@ -132,9 +166,9 @@ public class SchermataOperatore {
 
     /**
      * Chiede un titolo (anche parziale), cerca le proiezioni corrispondenti,
-     * le mostra in un elenco numerato e chiede di sceglierne una. Restituisce
-     * lo Spettacolo scelto, oppure null se l'utente annulla o non ci sono
-     * risultati.
+     * le mostra in un elenco numerato e chiede di sceglierne una.
+     *
+     * @return lo Spettacolo scelto, oppure null se l'utente annulla o non ci sono risultati
      */
     private Spettacolo cercaESeleziona() {
         System.out.print("Titolo (anche parziale, invio per vedere tutte le proiezioni): ");
@@ -156,6 +190,11 @@ public class SchermataOperatore {
         return risultati[scelta - 1];
     }
 
+    /**
+     * Legge una riga di input, restituendo null se e' vuota.
+     *
+     * @return il testo inserito (senza spazi iniziali/finali), oppure null se vuoto
+     */
     private String leggiOpzionale() {
         String testo = tastiera.nextLine().trim();
         if (testo.isEmpty()) {
@@ -165,8 +204,8 @@ public class SchermataOperatore {
     }
 
     /**
-     * Mostra l'intero palinsesto in ordine cronologico, con l'indicazione se ogni
-     * proiezione e' futura o gia' passata.
+     * Mostra l'intero palinsesto in ordine cronologico, con l'indicazione se
+     * ogni proiezione e' futura o gia' passata.
      */
     private void stampaPalinsesto() {
         Spettacolo[] palinsesto = gestoreSpettacoli.elencoPalinsesto();
@@ -187,6 +226,12 @@ public class SchermataOperatore {
         }
     }
 
+    /**
+     * Legge un numero intero dall'input, restituendo 0 se il testo inserito
+     * non e' un numero valido.
+     *
+     * @return il numero intero inserito, oppure 0 se il formato non e' valido
+     */
     private int leggiIntero() {
         try {
             return Integer.parseInt(tastiera.nextLine().trim());
@@ -196,6 +241,12 @@ public class SchermataOperatore {
         }
     }
 
+    /**
+     * Legge un numero decimale dall'input, restituendo 0 se il testo
+     * inserito non e' un numero valido.
+     *
+     * @return il numero decimale inserito, oppure 0 se il formato non e' valido
+     */
     private double leggiDouble() {
         try {
             return Double.parseDouble(tastiera.nextLine().trim());
@@ -205,6 +256,12 @@ public class SchermataOperatore {
         }
     }
 
+    /**
+     * Legge una data/ora dall'input nel formato di {@link Spettacolo#FORMATO_LETTURA},
+     * restituendo null se il formato inserito non e' valido.
+     *
+     * @return la data/ora inserita, oppure null se il formato non e' valido
+     */
     private LocalDateTime leggiDataOra() {
         String testo = tastiera.nextLine().trim();
         try {

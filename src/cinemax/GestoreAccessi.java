@@ -5,15 +5,22 @@ import java.time.LocalDate;
 /**
  * Gestisce login, registrazione e stato di sessione dell'utente corrente.
  *
- * @author Davide De Agostini 766294 (CO)
- * @author Luigi d'Elia 765969 (CO)
- * @author Ahsan Saeed 767241 (CO)
- * @author Martina Zecchini 765842 (CO)
+ * @author Davide De Agostini - Matricola 766294 - CO
+ * @author Luigi d'Elia - Matricola 765969 - CO
+ * @author Ahsan Saeed - Matricola 767241 - CO
+ * @author Martina Zecchini - Matricola 765842 - CO
  */
 public class GestoreAccessi {
+    /** L'archivio degli account su cui operano login e registrazione. */
     private ArchivioAccount archivioAccount;
+    /** L'account attualmente autenticato, oppure null se nessuno ha effettuato il login. */
     private Account utenteCorrente;
 
+    /**
+     * Costruttore che collega il gestore all'archivio degli account.
+     *
+     * @param archivioAccount l'archivio da cui leggere e su cui salvare gli account
+     */
     public GestoreAccessi(ArchivioAccount archivioAccount) {
         this.archivioAccount = archivioAccount;
         this.utenteCorrente = null;
@@ -22,6 +29,13 @@ public class GestoreAccessi {
     /**
      * Verifica username e password; se corretti imposta l'utente corrente e lo
      * restituisce.
+     * <p>
+     * La verifica della password avviene tramite {@link Cifratura#corrisponde(String, String)},
+     * senza mai decifrare la password salvata.
+     *
+     * @param username lo username da verificare
+     * @param password la password in chiaro inserita dall'utente
+     * @return l'account autenticato, oppure null se username o password non sono corretti
      */
     public Account login(String username, String password) {
         Account account = archivioAccount.trovaPerUsername(username);
@@ -37,7 +51,21 @@ public class GestoreAccessi {
         return account;
     }
 
-    /** Registra un nuovo cliente, se lo username non e' gia' in uso. */
+    /**
+     * Registra un nuovo cliente, se lo username non e' gia' in uso.
+     * <p>
+     * La password viene cifrata con {@link Cifratura#cifra(String)} prima di
+     * essere salvata; il nuovo account viene creato con ruolo
+     * {@link Account#SPETTATORE}.
+     *
+     * @param nome        il nome del nuovo cliente
+     * @param cognome     il cognome del nuovo cliente
+     * @param username    lo username scelto (deve essere univoco)
+     * @param password    la password in chiaro scelta dal cliente
+     * @param dataNascita la data di nascita (puo' essere null)
+     * @param domicilio   il luogo di domicilio
+     * @return true se la registrazione e' andata a buon fine, false altrimenti
+     */
     public boolean registraCliente(String nome, String cognome, String username, String password,
             LocalDate dataNascita, String domicilio) {
         if (username == null || username.trim().isEmpty()) {
@@ -59,10 +87,19 @@ public class GestoreAccessi {
         return true;
     }
 
+    /**
+     * Termina la sessione dell'utente corrente, riportando
+     * {@link #utenteCorrente} a null.
+     */
     public void logout() {
         utenteCorrente = null;
     }
 
+    /**
+     * Restituisce l'utente attualmente autenticato.
+     *
+     * @return l'account corrente, oppure null se nessuno ha effettuato il login
+     */
     public Account getUtenteCorrente() {
         return utenteCorrente;
     }
